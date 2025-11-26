@@ -46,7 +46,7 @@ RATE_LIMIT_DELAY = 5.0
 API_CALL_COUNT = 0
 LAST_API_CALL_TIME = None
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 DEBUG_LAST_MATCHDAY = 12
 
 # =======================
