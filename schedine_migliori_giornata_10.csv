@@ -1,13 +1,13 @@
 posizione,num_partite,roi_percentage,probabilita_totale,quota_totale,partite,tipi_scommessa,expected_return_per_euro
-1,2,802.4,33.42209472091622,27.0,US Lecce vs Torino FC | AC Pisa 1909 vs FC Internazionale Milano,1 | 1,9.02
-2,2,689.61,38.14554066741411,20.7,Juventus FC vs Cagliari Calcio | AC Pisa 1909 vs FC Internazionale Milano,GG | 1,7.9
-3,2,672.31,39.005397313116156,19.8,AC Pisa 1909 vs FC Internazionale Milano | Bologna FC 1909 vs US Cremonese,1 | GG,7.72
-4,3,1552.65,26.612713635892415,62.1,Juventus FC vs Cagliari Calcio | US Lecce vs Torino FC | AC Pisa 1909 vs FC Internazionale Milano,GG | 1 | 1,16.53
-5,3,1516.43,27.212603381315155,59.4,US Lecce vs Torino FC | AC Pisa 1909 vs FC Internazionale Milano | Bologna FC 1909 vs US Cremonese,1 | 1 | GG,16.16
-6,3,1325.74,24.560574497603973,58.05,Parma Calcio 1913 vs Udinese Calcio | US Lecce vs Torino FC | AC Pisa 1909 vs FC Internazionale Milano,GG | 1 | 1,14.26
-7,4,2860.33,21.668337281709572,136.62,Juventus FC vs Cagliari Calcio | US Lecce vs Torino FC | AC Pisa 1909 vs FC Internazionale Milano | Bologna FC 1909 vs US Cremonese,GG | 1 | 1 | GG,29.6
-8,4,2511.1,19.55662986702883,133.51,Parma Calcio 1913 vs Udinese Calcio | Juventus FC vs Cagliari Calcio | US Lecce vs Torino FC | AC Pisa 1909 vs FC Internazionale Milano,GG | GG | 1 | 1,26.11
-9,4,2453.88,19.997465096114073,127.71,Parma Calcio 1913 vs Udinese Calcio | US Lecce vs Torino FC | AC Pisa 1909 vs FC Internazionale Milano | Bologna FC 1909 vs US Cremonese,GG | 1 | 1 | GG,25.54
-10,5,4577.17,15.923203392562474,293.73,Parma Calcio 1913 vs Udinese Calcio | Juventus FC vs Cagliari Calcio | US Lecce vs Torino FC | AC Pisa 1909 vs FC Internazionale Milano | Bologna FC 1909 vs US Cremonese,GG | GG | 1 | 1 | GG,46.77
-11,5,4274.06,16.675143668326477,262.31,Juventus FC vs Cagliari Calcio | US Lecce vs Torino FC | AC Pisa 1909 vs FC Internazionale Milano | AS Roma vs SSC Napoli | Bologna FC 1909 vs US Cremonese,GG | 1 | 1 | GG | GG,43.74
-12,5,3958.78,15.636061472355777,259.58,Juventus FC vs Cagliari Calcio | AC Milan vs SS Lazio | US Lecce vs Torino FC | AC Pisa 1909 vs FC Internazionale Milano | Bologna FC 1909 vs US Cremonese,GG | GG | 1 | 1 | GG,40.59
+1,2,602.2,35.46469155390398,19.8,AC Pisa 1909 vs FC Internazionale Milano | Bologna FC 1909 vs US Cremonese,1 | GG,7.02
+2,2,594.04,35.86780914919153,19.35,Parma Calcio 1913 vs Udinese Calcio | AC Pisa 1909 vs FC Internazionale Milano,GG | 1,6.94
+3,2,563.76,35.97589539663014,18.45,US Lecce vs Torino FC | AC Pisa 1909 vs FC Internazionale Milano,GG | 1,6.64
+4,3,1000.57,25.853209136918597,42.57,Parma Calcio 1913 vs Udinese Calcio | AC Pisa 1909 vs FC Internazionale Milano | Bologna FC 1909 vs US Cremonese,GG | 1 | GG,11.01
+5,3,952.54,25.931116776836944,40.59,US Lecce vs Torino FC | AC Pisa 1909 vs FC Internazionale Milano | Bologna FC 1909 vs US Cremonese,GG | 1 | GG,10.53
+6,3,940.31,26.225868795822105,39.67,Parma Calcio 1913 vs Udinese Calcio | US Lecce vs Torino FC | AC Pisa 1909 vs FC Internazionale Milano,GG | GG | 1,10.4
+7,4,1549.67,18.90338124515919,87.27,Parma Calcio 1913 vs Udinese Calcio | US Lecce vs Torino FC | AC Pisa 1909 vs FC Internazionale Milano | Bologna FC 1909 vs US Cremonese,GG | GG | 1 | GG,16.5
+8,4,1422.48,18.627133658138163,81.73,Parma Calcio 1913 vs Udinese Calcio | AC Pisa 1909 vs FC Internazionale Milano | AS Roma vs SSC Napoli | Bologna FC 1909 vs US Cremonese,GG | 1 | GG | GG,15.22
+9,4,1411.57,18.688392781379584,80.88,Parma Calcio 1913 vs Udinese Calcio | AC Milan vs SS Lazio | AC Pisa 1909 vs FC Internazionale Milano | Bologna FC 1909 vs US Cremonese,GG | GG | 1 | GG,15.12
+10,5,607.8,20.00976465832714,35.37,Parma Calcio 1913 vs Udinese Calcio | AC Milan vs SS Lazio | US Lecce vs Torino FC | AS Roma vs SSC Napoli | Bologna FC 1909 vs US Cremonese,GG | GG | GG | GG | GG,7.08
+11,5,592.0,20.31144294664527,34.07,Genoa CFC vs Hellas Verona FC | Parma Calcio 1913 vs Udinese Calcio | US Lecce vs Torino FC | AS Roma vs SSC Napoli | Bologna FC 1909 vs US Cremonese,GG | GG | GG | GG | GG,6.92
+12,5,588.98,20.00397057075578,34.44,Como 1907 vs US Sassuolo Calcio | Parma Calcio 1913 vs Udinese Calcio | US Lecce vs Torino FC | AS Roma vs SSC Napoli | Bologna FC 1909 vs US Cremonese,GG | GG | GG | GG | GG,6.89
