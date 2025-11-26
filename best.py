@@ -2,7 +2,7 @@
 Serie A 2025-26 Predictor - VERSIONE V6 ENHANCED
 AUTO + DEBUG MODE + QUOTE SNAI REALI + SCHEDINE INTELLIGENTI
 Con ELO Rating + Forma Recente + Feature Scaling + Cross-Validation
-TOP 3 SICURE + Predizione prossima giornata
+TOP 3 SICURE + TOP CONSIGLIATE PER CATEGORIA (EV/Sicurezza) + Predizione prossima giornata
 """
 
 import requests
@@ -540,8 +540,6 @@ def calculate_best_bets(df_matches, odds_list, top_n_per_category=3):
                 }
                 schedules_by_count[n].append(sched)
                 all_schedules_flat.append(sched)
-        
-        schedules_by_count[n].sort(key=lambda x: x['roi_percentage'], reverse=True)
     
     all_top_schedules = []
     
@@ -551,12 +549,28 @@ def calculate_best_bets(df_matches, odds_list, top_n_per_category=3):
         if not scheds:
             continue
         
+        # CALCOLA SCORE PER OGNI SCHEDINA: EV + Sicurezza
+        scored_scheds = []
+        for sched in scheds:
+            prob_score = (sched['total_probability'] / 100) * 0.6  # 60% probabilità
+            ev_score = min(sched['expected_return_per_euro'], 2.0) / 2.0 * 0.4  # 40% EV
+            combined_score = prob_score + ev_score
+            
+            scored_scheds.append({
+                **sched,
+                'score': combined_score
+            })
+        
+        # ORDINA PER SCORE (migliori consigliate)
+        scored_scheds.sort(key=lambda x: x['score'], reverse=True)
+        
         print(f"\n{'=' * 100}", flush=True)
-        print(f"[🏆 TOP {min(top_n_per_category, len(scheds))} SCHEDINE CON {num_partite} PARTITE]", flush=True)
+        print(f"[🏆 TOP {min(top_n_per_category, len(scored_scheds))} SCHEDINE CONSIGLIATE CON {num_partite} PARTITE]", flush=True)
+        print(f"[Ordinate per Sicurezza (Prob + EV bilanciati)]", flush=True)
         print(f"{'=' * 100}\n", flush=True)
         
-        for i, sched in enumerate(scheds[:top_n_per_category]):
-            print(f"{i+1}. ROI: {sched['roi_percentage']:6.1f}% | Prob: {sched['total_probability']:5.1f}% | Quota: {sched['total_quota']:6.2f}", flush=True)
+        for i, sched in enumerate(scored_scheds[:top_n_per_category]):
+            print(f"{i+1}. SCORE: {sched['score']:.2f} | EV: {sched['expected_return_per_euro']:.2f}x | Prob: {sched['total_probability']:5.1f}% | ROI: {sched['roi_percentage']:6.1f}% | Quota: {sched['total_quota']:6.2f}", flush=True)
             for j, match in enumerate(sched['matches']):
                 print(f"   {j+1}) {match} ({sched['types'][j]})", flush=True)
             print()
@@ -596,7 +610,8 @@ def calculate_best_bets(df_matches, odds_list, top_n_per_category=3):
             'quota_totale': float(sched['total_quota']),
             'partite': ' | '.join(sched['matches']),
             'tipi_scommessa': ' | '.join(sched['types']),
-            'expected_return_per_euro': float(sched['expected_return_per_euro'])
+            'expected_return_per_euro': float(sched['expected_return_per_euro']),
+            'score': float(sched.get('score', 0))
         })
     
     df_export = pd.DataFrame(export_data)
