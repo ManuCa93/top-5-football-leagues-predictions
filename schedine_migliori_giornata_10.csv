@@ -1,13 +1,13 @@
 posizione,num_partite,roi_percentage,probabilita_totale,quota_totale,partite,tipi_scommessa,expected_return_per_euro,score
-1,2,101.27,53.651432760701034,3.75,Genoa CFC vs Hellas Verona FC | US Lecce vs Torino FC,GG | GG,2.01,0.7219085965642063
-2,2,110.46,53.49024199747261,3.93,Genoa CFC vs Hellas Verona FC | Parma Calcio 1913 vs Udinese Calcio,GG | GG,2.1,0.7209414519848356
-3,2,134.93,53.30197561827741,4.41,Parma Calcio 1913 vs Udinese Calcio | US Lecce vs Torino FC,GG | GG,2.35,0.7198118537096645
-4,3,215.46,39.11106091390892,8.07,Genoa CFC vs Hellas Verona FC | Parma Calcio 1913 vs Udinese Calcio | US Lecce vs Torino FC,GG | GG | GG,3.15,0.6346663654834536
-5,3,152.23,38.8630688758103,6.49,Genoa CFC vs Hellas Verona FC | US Lecce vs Torino FC | Atalanta BC vs ACF Fiorentina,GG | GG | GG,2.52,0.6331784132548618
-6,3,176.44,38.78276941967533,7.13,Genoa CFC vs Hellas Verona FC | AC Milan vs SS Lazio | US Lecce vs Torino FC,GG | GG | GG,2.76,0.632696616518052
-7,4,295.32,28.330573404865657,13.95,Genoa CFC vs Hellas Verona FC | Parma Calcio 1913 vs Udinese Calcio | US Lecce vs Torino FC | Atalanta BC vs ACF Fiorentina,GG | GG | GG | GG,3.95,0.5699834404291939
-8,4,333.27,28.272036348935448,15.32,Genoa CFC vs Hellas Verona FC | Parma Calcio 1913 vs Udinese Calcio | AC Milan vs SS Lazio | US Lecce vs Torino FC,GG | GG | GG | GG,4.33,0.5696322180936126
-9,4,321.74,28.263849813150376,14.92,Como 1907 vs US Sassuolo Calcio | Genoa CFC vs Hellas Verona FC | Parma Calcio 1913 vs Udinese Calcio | US Lecce vs Torino FC,GG | GG | GG | GG,4.22,0.5695830988789022
-10,5,442.95,20.47919392551436,26.51,Genoa CFC vs Hellas Verona FC | Parma Calcio 1913 vs Udinese Calcio | AC Milan vs SS Lazio | US Lecce vs Torino FC | Atalanta BC vs ACF Fiorentina,GG | GG | GG | GG | GG,5.43,0.5228751635530862
-11,5,428.5,20.473263908594056,25.81,Como 1907 vs US Sassuolo Calcio | Genoa CFC vs Hellas Verona FC | Parma Calcio 1913 vs Udinese Calcio | US Lecce vs Torino FC | Atalanta BC vs ACF Fiorentina,GG | GG | GG | GG | GG,5.29,0.5228395834515643
-12,5,479.24,20.43096174346084,28.35,Como 1907 vs US Sassuolo Calcio | Genoa CFC vs Hellas Verona FC | Parma Calcio 1913 vs Udinese Calcio | AC Milan vs SS Lazio | US Lecce vs Torino FC,GG | GG | GG | GG | GG,5.79,0.522585770460765
+1,2,106.47,55.03732817569807,3.75,Genoa CFC vs Hellas Verona FC | US Lecce vs Torino FC,GG | GG,2.06,0.7302239690541885
+2,2,116.51,55.02980384844987,3.93,Genoa CFC vs Hellas Verona FC | Parma Calcio 1913 vs Udinese Calcio,GG | GG,2.17,0.7301788230906993
+3,2,140.74,54.620324013482225,4.41,Parma Calcio 1913 vs Udinese Calcio | US Lecce vs Torino FC,GG | GG,2.41,0.7277219440808933
+4,3,228.06,40.67286729716159,8.07,Genoa CFC vs Hellas Verona FC | Parma Calcio 1913 vs Udinese Calcio | US Lecce vs Torino FC,GG | GG | GG,3.28,0.6440372037829696
+5,3,162.92,40.51147266721041,6.49,Genoa CFC vs Hellas Verona FC | US Lecce vs Torino FC | Atalanta BC vs ACF Fiorentina,GG | GG | GG,2.63,0.6430688360032625
+6,3,175.71,40.505934215622034,6.81,Genoa CFC vs Hellas Verona FC | Parma Calcio 1913 vs Udinese Calcio | Atalanta BC vs ACF Fiorentina,GG | GG | GG,2.76,0.6430356052937323
+7,4,317.75,29.93818570817894,13.95,Genoa CFC vs Hellas Verona FC | Parma Calcio 1913 vs Udinese Calcio | US Lecce vs Torino FC | Atalanta BC vs ACF Fiorentina,GG | GG | GG | GG,4.18,0.5796291142490737
+8,4,361.43,29.79641624991957,15.49,Genoa CFC vs Hellas Verona FC | Parma Calcio 1913 vs Udinese Calcio | US Lecce vs Torino FC | AS Roma vs SSC Napoli,GG | GG | GG | GG,4.61,0.5787784974995175
+9,4,356.11,29.7624902624138,15.32,Genoa CFC vs Hellas Verona FC | Parma Calcio 1913 vs Udinese Calcio | AC Milan vs SS Lazio | US Lecce vs Torino FC,GG | GG | GG | GG,4.56,0.5785749415744827
+10,5,487.59,21.932327431229464,26.79,Genoa CFC vs Hellas Verona FC | Parma Calcio 1913 vs Udinese Calcio | US Lecce vs Torino FC | Atalanta BC vs ACF Fiorentina | AS Roma vs SSC Napoli,GG | GG | GG | GG | GG,5.88,0.5315939645873768
+11,5,480.81,21.90735543929045,26.51,Genoa CFC vs Hellas Verona FC | Parma Calcio 1913 vs Udinese Calcio | AC Milan vs SS Lazio | US Lecce vs Torino FC | Atalanta BC vs ACF Fiorentina,GG | GG | GG | GG | GG,5.81,0.5314441326357427
+12,5,541.54,21.80361522126932,29.42,Genoa CFC vs Hellas Verona FC | Parma Calcio 1913 vs Udinese Calcio | AC Milan vs SS Lazio | US Lecce vs Torino FC | AS Roma vs SSC Napoli,GG | GG | GG | GG | GG,6.42,0.5308216913276159

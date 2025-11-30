@@ -1,8 +1,8 @@
 """
-Serie A 2025-26 Predictor - VERSIONE V6 ENHANCED
-AUTO + DEBUG MODE + QUOTE SNAI REALI + SCHEDINE INTELLIGENTI
+Serie A 2025-26 Predictor - VERSIONE V7 ULTIMATE
+AUTO + DEBUG MODE + QUOTE SNAI REALI + SCHEDINE INTELLIGENTI + MONEY MANAGEMENT
 Con ELO Rating + Forma Recente + Feature Scaling + Cross-Validation
-TOP 3 SICURE + TOP CONSIGLIATE PER CATEGORIA (EV/Sicurezza) + Predizione prossima giornata
+TOP 3 SICURE + TOP CONSIGLIATE PER CATEGORIA + GESTIONE BUDGET
 """
 
 import requests
@@ -27,7 +27,7 @@ except:
     pass
 
 print("=" * 80, flush=True)
-print("[START] Serie A 2025-26 Predictor - FINAL VERSION V6 ENHANCED", flush=True)
+print("[START] Serie A 2025-26 Predictor - FINAL VERSION V7 ULTIMATE", flush=True)
 print("=" * 80, flush=True)
 
 # =======================
@@ -37,16 +37,19 @@ API_KEY = "f65cdbbd6d67477883d3f468626a19cf"
 COMPETITION_ID = 2019
 SEASONS_TRAIN = [2024, 2023]
 SEASONS_CURRENT = [2025]
-SEASON_WEIGHTS = {2025: 0.5, 2024: 0.3, 2023: 0.2}
+SEASON_WEIGHTS = {2025: 0.8, 2024: 0.15, 2023: 0.05}
 PREDICT_SEASON = 2025
 SEED = 42
 np.random.seed(SEED)
+
+# CONFIGURAZIONE BUDGET
+BUDGET_TOTALE = 100.0  # Euro da investire
 
 RATE_LIMIT_DELAY = 5.0
 API_CALL_COUNT = 0
 LAST_API_CALL_TIME = None
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 DEBUG_LAST_MATCHDAY = 12
 
 # =======================
@@ -125,37 +128,26 @@ def fetch_odds_per_matchday(df_matches):
 def get_default_odds():
     """
     Quote REALI da SNAI - Stagione 2025-26 Serie A Giornata 13
-    Dati estratti direttamente da SNAI (28/11 - 01/12)
-    CON TUTTE LE QUOTE: 1, X, 2, 1X, 2X, GG (GOAL), NG (NOGOAL)
     """
     return [
         # 1. Como vs Sassuolo (28/11 20:45)
         {'1': 1.63, 'X': 3.90, '2': 5.25, '1X': 1.14, '2X': 2.20, 'GG': 1.85, 'NG': 1.87},
-        
         # 2. Parma vs Udinese (29/11 15:00)
         {'1': 2.65, 'X': 3.10, '2': 2.75, '1X': 1.43, '2X': 1.45, 'GG': 1.83, 'NG': 1.88},
-        
         # 3. Genoa vs Verona (29/11 15:00)
         {'1': 2.05, 'X': 3.00, '2': 4.10, '1X': 1.22, '2X': 1.73, 'GG': 2.15, 'NG': 1.63},
-        
         # 4. Juventus vs Cagliari (29/11 18:00)
         {'1': 1.32, 'X': 5.00, '2': 9.50, '1X': 1.04, '2X': 3.25, 'GG': 2.30, 'NG': 1.55},
-        
         # 5. Milan vs Lazio (29/11 20:45)
         {'1': 1.60, 'X': 4.00, '2': 5.50, '1X': 1.13, '2X': 2.25, 'GG': 1.90, 'NG': 1.80},
-        
         # 6. Lecce vs Torino (30/11 12:30)
         {'1': 3.00, 'X': 2.85, '2': 2.60, '1X': 1.45, '2X': 1.35, 'GG': 2.05, 'NG': 1.70},
-        
         # 7. Pisa vs Inter (30/11 15:00)
         {'1': 9.00, 'X': 5.25, '2': 1.30, '1X': 3.25, '2X': 1.04, 'GG': 2.15, 'NG': 1.63},
-        
         # 8. Atalanta vs Fiorentina (30/11 18:00)
         {'1': 1.70, 'X': 3.75, '2': 4.60, '1X': 1.17, '2X': 2.05, 'GG': 1.73, 'NG': 2.00},
-        
         # 9. Roma vs Napoli (30/11 20:45)
         {'1': 2.55, 'X': 2.80, '2': 3.10, '1X': 1.33, '2X': 1.47, 'GG': 1.92, 'NG': 1.77},
-        
         # 10. Bologna vs Cremonese (01/12 20:45)
         {'1': 1.45, 'X': 4.10, '2': 7.00, '1X': 1.07, '2X': 2.60, 'GG': 2.20, 'NG': 1.60},
     ]
@@ -270,7 +262,6 @@ def build_match_df(seasons_train, seasons_current, current_matchday):
 # ELO RATING SYSTEM
 # =======================
 def compute_elo(df, k=20):
-    """Calcola ELO rating per ogni squadra"""
     teams = list(set(df["home_team"]).union(set(df["away_team"])))
     elo = {t: 1500 for t in teams}
     
@@ -304,7 +295,6 @@ def compute_elo(df, k=20):
 # RECENT FORM
 # =======================
 def add_recent_form(df, window=5):
-    """Aggiunge statistiche ultimi 5 match"""
     teams = set(df["home_team"]).union(set(df["away_team"]))
     
     df["home_pts5"] = 0
@@ -340,7 +330,6 @@ def add_recent_form(df, window=5):
 # FEATURE ENGINEERING V2
 # =======================
 def compute_stats_v2(df, team, idx, season):
-    """Versione migliorata di compute_stats"""
     df_s = df[(df["season"] == season) & (df.index < idx)]
     
     home = df_s[df_s["home_team"] == team]
@@ -359,7 +348,6 @@ def compute_stats_v2(df, team, idx, season):
     }
 
 def build_features_v2(df_matches):
-    """Build features con ELO e Recent Form"""
     print("[2a] Calcolo ELO rating...", flush=True)
     df_matches, elo_dict = compute_elo(df_matches)
     
@@ -410,11 +398,9 @@ def build_features_v2(df_matches):
 # SCALER + MODEL TRAINING
 # =======================
 def train_model_v2(X, y, seasons):
-    """Training con GridSearch per alpha"""
     print("\n[3] Training Ridge model con GridSearch...", flush=True)
     print("-" * 80, flush=True)
     
-    # Scale features
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     
@@ -427,7 +413,6 @@ def train_model_v2(X, y, seasons):
     
     print(f"Train: {X_train.shape}, Test: {X_test.shape}", flush=True)
     
-    # GridSearch per alpha
     param_grid = {'alpha': [0.10, 0.12, 0.15, 0.18, 0.20]}
     ridge = Ridge()
     grid = GridSearchCV(ridge, param_grid, cv=5, scoring='neg_mean_absolute_error', n_jobs=-1)
@@ -468,8 +453,64 @@ def label(pred):
         return "2"
     return "X"
 
+# ==============================================================================
+# 💰 NUOVO MODULO: MONEY MANAGEMENT
+# ==============================================================================
+def apply_money_management(schedine_selezionate, budget_totale=100):
+    """
+    Calcola lo stake ideale per ogni schedina basandosi sullo SCORE (EV + Prob).
+    Usa un sistema a pesi ponderati normalizzati sul budget totale.
+    """
+    print(f"\n{'='*100}")
+    print(f" [💰 MONEY MANAGEMENT STRATEGY] BUDGET: {budget_totale}€ ")
+    print(f"{'='*100}")
+
+    schedine_con_stake = []
+    somma_pesi = 0
+    
+    # 1. Assegno un 'peso' a ogni schedina basato sul suo SCORE
+    # Lo SCORE calcolato in precedenza già combina Sicurezza ed EV.
+    # Eleviamo lo score al quadrato per premiare maggiormente le schedine migliori.
+    
+    for schedina in schedine_selezionate:
+        score = schedina.get('score', 0.5)
+        # Se è una schedina ad alto rischio (4-5 partite), riduco leggermente il peso
+        num = schedina['num_matches']
+        fattore_rischio = 1.0
+        if num == 4: fattore_rischio = 0.8
+        if num == 5: fattore_rischio = 0.6
+        
+        peso_finale = (score ** 2) * fattore_rischio
+        
+        schedina['peso_stake'] = peso_finale
+        somma_pesi += peso_finale
+        schedine_con_stake.append(schedina)
+
+    # 2. Distribuzione Budget
+    print(f"{'TIPO SCHEDINA':<35} | {'QUOTA':<8} | {'PROB':<7} | {'EV':<6} | {'% BUDGET':<10} | {'PUNTATA €':<10}")
+    print("-" * 100)
+
+    for schedina in schedine_con_stake:
+        if somma_pesi > 0:
+            percentuale_reale = (schedina['peso_stake'] / somma_pesi) 
+            puntata_euro = percentuale_reale * budget_totale
+        else:
+            percentuale_reale = 0
+            puntata_euro = 0
+            
+        puntata_euro = round(puntata_euro, 2)
+        perc_str = f"{round(percentuale_reale * 100, 1)}%"
+        
+        nome_display = f"{schedina['num_matches']} Partite (Score {schedina['score']:.2f})"
+        
+        print(f"{nome_display:<35} | {schedina['total_quota']:<8.2f} | {schedina['total_probability']:<6.1f}% | {schedina['expected_return_per_euro']:<6.2f} | {perc_str:<10} | {puntata_euro}€")
+
+    print("-" * 100)
+    print("Nota: La strategia 'Pesata' punta di più sulle schedine a basso rischio e alto EV.")
+    print(f"{'='*100}\n")
+
 # =======================
-# BEST BETS CALCULATION
+# BEST BETS CALCULATION (MODIFICATA)
 # =======================
 def calculate_best_bets(df_matches, odds_list, top_n_per_category=3):
     print("\n[SCHEDINE] Calcolo schedine ottimizzate per rischio/reward...", flush=True)
@@ -508,11 +549,19 @@ def calculate_best_bets(df_matches, odds_list, top_n_per_category=3):
     schedules_by_count = {2: [], 3: [], 4: [], 5: []}
     all_schedules_flat = []
     
+    # Generazione combinazioni
     for n in range(2, 6):
         if n > len(match_options):
             continue
         
+        # Limita le combinazioni per evitare esplosioni combinatorie se troppe opzioni
+        iter_limit = 5000 
+        count_iter = 0
+        
         for combo in itertools.combinations(range(len(match_options)), n):
+            count_iter += 1
+            if count_iter > iter_limit: break
+            
             matches_data = []
             for idx in combo:
                 best_option = match_options[idx]['options'][0]
@@ -542,6 +591,7 @@ def calculate_best_bets(df_matches, odds_list, top_n_per_category=3):
                 all_schedules_flat.append(sched)
     
     all_top_schedules = []
+    portfolio_best_picks = [] # Lista per il Money Management
     
     for num_partite in [2, 3, 4, 5]:
         scheds = schedules_by_count[num_partite]
@@ -549,11 +599,11 @@ def calculate_best_bets(df_matches, odds_list, top_n_per_category=3):
         if not scheds:
             continue
         
-        # CALCOLA SCORE PER OGNI SCHEDINA: EV + Sicurezza
+        # CALCOLA SCORE
         scored_scheds = []
         for sched in scheds:
-            prob_score = (sched['total_probability'] / 100) * 0.6  # 60% probabilità
-            ev_score = min(sched['expected_return_per_euro'], 2.0) / 2.0 * 0.4  # 40% EV
+            prob_score = (sched['total_probability'] / 100) * 0.6 
+            ev_score = min(sched['expected_return_per_euro'], 2.0) / 2.0 * 0.4
             combined_score = prob_score + ev_score
             
             scored_scheds.append({
@@ -561,8 +611,12 @@ def calculate_best_bets(df_matches, odds_list, top_n_per_category=3):
                 'score': combined_score
             })
         
-        # ORDINA PER SCORE (migliori consigliate)
+        # ORDINA
         scored_scheds.sort(key=lambda x: x['score'], reverse=True)
+        
+        # Salva la migliore per il Money Management
+        if len(scored_scheds) > 0:
+            portfolio_best_picks.append(scored_scheds[0])
         
         print(f"\n{'=' * 100}", flush=True)
         print(f"[🏆 TOP {min(top_n_per_category, len(scored_scheds))} SCHEDINE CONSIGLIATE CON {num_partite} PARTITE]", flush=True)
@@ -576,6 +630,13 @@ def calculate_best_bets(df_matches, odds_list, top_n_per_category=3):
             print()
             all_top_schedules.append(sched)
     
+    # -----------------------------------------------------------
+    # CHIAMATA AL NUOVO MONEY MANAGEMENT
+    # -----------------------------------------------------------
+    if portfolio_best_picks:
+        apply_money_management(portfolio_best_picks, budget_totale=BUDGET_TOTALE)
+    # -----------------------------------------------------------
+
     print(f"\n{'=' * 100}", flush=True)
     print(f"[🔒 TOP 10 SCHEDINE PIÙ SICURE - Miglior equilibrio Probabilità/ROI]", flush=True)
     print(f"{'=' * 100}\n", flush=True)
@@ -716,8 +777,6 @@ try:
     } for m in future_matches])
     
     print(f"[OK] DataFrame creato: {df_next.shape}", flush=True)
-    print(f"[INFO] Partite FINISHED: {(df_next['status'] == 'FINISHED').sum()}", flush=True)
-    print(f"[INFO] Partite SCHEDULED: {(df_next['status'].isin(['SCHEDULED', 'TOBE_PLAYED'])).sum()}", flush=True)
     
     print("\n[5] Generazione predizioni...", flush=True)
     print("-" * 80, flush=True)
@@ -753,7 +812,6 @@ try:
     print(f"[OK] Features create: {X_next.shape}", flush=True)
     
     preds = model.predict(X_next_scaled)
-    print(f"[OK] Predizioni generate: {preds.shape}", flush=True)
     
     df_next["prediction"] = preds
     df_next["rounded"] = np.round(preds, 2)
