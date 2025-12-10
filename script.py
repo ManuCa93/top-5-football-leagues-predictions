@@ -24,6 +24,7 @@ import itertools
 import warnings
 import sys
 import io
+import os 
 import traceback
 import time
 from datetime import datetime, timedelta
@@ -38,41 +39,41 @@ except:
 def get_odds_mapping():
     return {
         'SA': [
-            {'1': 2.80, 'X': 3.20, '2': 2.55, '1X': 1.50, '2X': 1.40, 'GG': 1.77, 'NG': 1.97},
-            {'1': 1.50, 'X': 4.40, '2': 6.00, '1X': 1.11, '2X': 2.50, 'GG': 1.80, 'NG': 1.90},
-            {'1': 4.75, 'X': 3.80, '2': 1.70, '1X': 2.10, '2X': 1.17, 'GG': 1.80, 'NG': 1.90},
-            {'1': 2.40, 'X': 3.00, '2': 3.15, '1X': 1.32, '2X': 1.50, 'GG': 1.97, 'NG': 1.75},
-            {'1': 5.25, 'X': 3.60, '2': 1.67, '1X': 2.10, '2X': 1.13, 'GG': 2.00, 'NG': 1.70},
-            {'1': 2.55, 'X': 3.00, '2': 2.85, '1X': 1.40, '2X': 1.47, 'GG': 2.00, 'NG': 1.73},
-            {'1': 2.30, 'X': 2.95, '2': 3.40, '1X': 1.30, '2X': 1.57, 'GG': 1.95, 'NG': 1.77},
-            {'1': 2.35, 'X': 2.95, '2': 3.35, '1X': 1.30, '2X': 1.55, 'GG': 1.97, 'NG': 1.77},
-            {'1': 2.40, 'X': 3.00, '2': 3.15, '1X': 1.32, '2X': 1.50, 'GG': 1.97, 'NG': 1.75},
-            {'1': 4.60, 'X': 3.55, '2': 1.75, '1X': 2.00, '2X': 1.17, 'GG': 1.82, 'NG': 1.90},
+            {'1': 2.40, 'X': 2.90, '2': 3.35, '1X': 1.30, '2X': 1.55, 'GG': 2.05, 'NG': 1.70},  # Lecce - Pisa
+            {'1': 1.95, 'X': 3.20, '2': 4.25, '1X': 1.21, '2X': 1.80, 'GG': 1.87, 'NG': 1.85},  # Torino - Cremonese
+            {'1': 3.55, 'X': 3.25, '2': 2.10, '1X': 1.70, '2X': 1.28, 'GG': 1.90, 'NG': 1.77},  # Parma - Lazio
+            {'1': 1.33, 'X': 5.25, '2': 8.50, '1X': 1.06, '2X': 3.20, 'GG': 2.00, 'NG': 1.73},  # Atalanta - Cagliari
+            {'1': 1.40, 'X': 4.60, '2': 7.50, '1X': 1.06, '2X': 2.80, 'GG': 2.00, 'NG': 1.73},  # Milan - Sassuolo
+            {'1': 4.40, 'X': 3.40, '2': 1.85, '1X': 1.90, '2X': 1.18, 'GG': 2.00, 'NG': 1.70},  # Udinese - Napoli
+            {'1': 1.80, 'X': 3.40, '2': 4.40, '1X': 1.18, '2X': 1.93, 'GG': 1.93, 'NG': 1.77},  # Fiorentina - Verona
+            {'1': 6.25, 'X': 4.10, '2': 1.50, '1X': 2.45, '2X': 1.09, 'GG': 2.00, 'NG': 1.73},  # Genoa - Inter
+            {'1': 2.85, 'X': 3.15, '2': 2.50, '1X': 1.50, '2X': 1.40, 'GG': 1.85, 'NG': 1.87},  # Bologna - Juventus
+            {'1': 2.10, 'X': 3.15, '2': 3.60, '1X': 1.25, '2X': 1.67, 'GG': 1.85, 'NG': 1.87},  # Roma - Como
         ],
         'PL': [
-            {'1': 4.10, 'X': 3.40, '2': 1.87, '1X': 1.85, '2X': 1.20, 'GG': 1.83, 'NG': 1.88},
-            {'1': 3.10, 'X': 3.65, '2': 2.10, '1X': 1.67, '2X': 1.33, 'GG': 1.50, 'NG': 2.40},
-            {'1': 2.15, 'X': 3.15, '2': 3.55, '1X': 1.27, '2X': 1.65, 'GG': 1.80, 'NG': 1.90},
-            {'1': 1.23, 'X': 6.00, '2': 11.00, '1X': 1.02, '2X': 3.80, 'GG': 1.97, 'NG': 1.75},
-            {'1': 1.28, 'X': 5.50, '2': 9.50, '1X': 1.03, '2X': 3.40, 'GG': 2.00, 'NG': 1.73},
-            {'1': 2.20, 'X': 3.50, '2': 3.05, '1X': 1.35, '2X': 1.60, 'GG': 1.60, 'NG': 2.20},
-            {'1': 4.25, 'X': 4.10, '2': 1.70, '1X': 2.05, '2X': 1.19, 'GG': 1.55, 'NG': 2.30},
-            {'1': 1.55, 'X': 4.10, '2': 5.25, '1X': 1.13, '2X': 2.35, 'GG': 1.63, 'NG': 2.15},
-            {'1': 2.55, 'X': 3.25, '2': 2.70, '1X': 1.40, '2X': 1.47, 'GG': 1.73, 'NG': 2.00},
-            {'1': 4.10, 'X': 3.85, '2': 1.75, '1X': 2.00, '2X': 1.20, 'GG': 1.60, 'NG': 2.20},
+            {'1': 1.65, 'X': 3.85, '2': 5.00, '1X': 1.14, '2X': 2.15, 'GG': 1.77, 'NG': 1.95},  # Chelsea - Everton
+            {'1': 1.67, 'X': 4.10, '2': 4.40, '1X': 1.18, '2X': 2.10, 'GG': 1.50, 'NG': 2.45},  # Liverpool - Brighton
+            {'1': 3.85, 'X': 3.50, '2': 1.90, '1X': 1.82, '2X': 1.23, 'GG': 1.80, 'NG': 1.90},  # Burnley - Fulham
+            {'1': 1.14, 'X': 7.50, '2': 18.00, '1X': 1.01, '2X': 5.00, 'GG': 2.65, 'NG': 1.40}, # Arsenal - Wolves (1X stimato)
+            {'1': 3.25, 'X': 3.25, '2': 2.20, '1X': 1.60, '2X': 1.30, 'GG': 1.67, 'NG': 2.10},  # Sunderland - Newcastle
+            {'1': 3.90, 'X': 3.80, '2': 1.80, '1X': 1.93, '2X': 1.22, 'GG': 1.55, 'NG': 2.30},  # C. Palace - Man City
+            {'1': 2.45, 'X': 3.30, '2': 2.75, '1X': 1.40, '2X': 1.50, 'GG': 1.70, 'NG': 2.05},  # N. Forest - Tottenham
+            {'1': 3.60, 'X': 3.50, '2': 2.00, '1X': 1.75, '2X': 1.25, 'GG': 1.63, 'NG': 2.15},  # West Ham - Aston Villa
+            {'1': 1.92, 'X': 3.50, '2': 3.75, '1X': 1.24, '2X': 1.80, 'GG': 1.70, 'NG': 2.00},  # Brentford - Leeds
+            {'1': 1.80, 'X': 4.00, '2': 3.80, '1X': 1.23, '2X': 1.93, 'GG': 1.50, 'NG': 2.45},  # Man United - Bournemouth
         ],
         'PD': [
-            {'1': 2.65, 'X': 3.00, '2': 2.80, '1X': 1.40, '2X': 1.43, 'GG': 1.95, 'NG': 1.77},
-            {'1': 1.55, 'X': 3.85, '2': 6.00, '1X': 1.10, '2X': 2.35, 'GG': 2.05, 'NG': 1.70},
-            {'1': 2.70, 'X': 2.95, '2': 2.75, '1X': 1.40, '2X': 1.40, 'GG': 1.97, 'NG': 1.75},
-            {'1': 3.85, 'X': 4.25, '2': 1.75, '1X': 2.00, '2X': 1.23, 'GG': 1.35, 'NG': 2.90},
-            {'1': 3.40, 'X': 3.25, '2': 2.15, '1X': 1.65, '2X': 1.30, 'GG': 1.87, 'NG': 1.85},
-            {'1': 2.15, 'X': 3.40, '2': 3.30, '1X': 1.30, '2X': 1.65, 'GG': 1.67, 'NG': 2.10},
-            {'1': 2.10, 'X': 3.40, '2': 3.40, '1X': 1.30, '2X': 1.67, 'GG': 1.80, 'NG': 1.90},
-            {'1': 2.25, 'X': 3.35, '2': 3.10, '1X': 1.33, '2X': 1.60, 'GG': 1.90, 'NG': 1.80},
-            {'1': 1.32, 'X': 5.50, '2': 8.00, '1X': 1.05, '2X': 3.15, 'GG': 1.60, 'NG': 2.20},
-            {'1': 1.75, 'X': 3.65, '2': 4.50, '1X': 1.17, '2X': 2.00, 'GG': 1.77, 'NG': 1.93},
-        ]
+            {'1': 1.70, 'X': 3.75, '2': 4.60, '1X': 1.17, '2X': 2.05, 'GG': 1.75, 'NG': 1.97},  # Real Sociedad - Girona
+            {'1': 1.30, 'X': 5.00, '2': 10.00, '1X': 1.03, '2X': 3.35, 'GG': 2.20, 'NG': 1.60}, # Atletico Madrid - Valencia
+            {'1': 2.40, 'X': 3.05, '2': 3.10, '1X': 1.33, '2X': 1.50, 'GG': 1.90, 'NG': 1.80},  # Maiorca - Elche
+            {'1': 1.20, 'X': 7.00, '2': 11.00, '1X': 1.02, '2X': 4.10, 'GG': 1.70, 'NG': 2.05}, # Barcellona - Osasuna
+            {'1': 2.45, 'X': 2.85, '2': 3.15, '1X': 1.32, '2X': 1.50, 'GG': 2.20, 'NG': 1.60},  # Getafe - Espanyol
+            {'1': 1.75, 'X': 3.45, '2': 4.90, '1X': 1.15, '2X': 2.00, 'GG': 1.95, 'NG': 1.77},  # Siviglia - Real Oviedo
+            {'1': 2.50, 'X': 3.15, '2': 2.80, '1X': 1.40, '2X': 1.50, 'GG': 1.80, 'NG': 1.90},  # Celta - Athletic Bilbao
+            {'1': 4.40, 'X': 4.25, '2': 1.65, '1X': 2.15, '2X': 1.18, 'GG': 1.57, 'NG': 2.30},  # Levante - Villarreal
+            {'1': 5.75, 'X': 4.00, '2': 1.55, '1X': 2.35, '2X': 1.11, 'GG': 1.70, 'NG': 2.00},  # Alaves - Real Madrid
+            {'1': 2.45, 'X': 3.35, '2': 2.75, '1X': 1.40, '2X': 1.50, 'GG': 1.70, 'NG': 2.05},  # Vallecano - Betis
+        ],
     }
 
 # =======================
@@ -117,7 +118,7 @@ np.random.seed(SEED)
 BUDGET_TOTALE = 100.0
 
 DEBUG_MODE = True
-DEBUG_MATCHDAYS = {'SA': 13, 'PL': 14, 'PD': 14}
+DEBUG_MATCHDAYS = {'SA': 14, 'PL': 15, 'PD': 15}
 
 LEAGUES_CONFIG = [
     {'code': 'SA', 'id': 2019, 'name': 'Serie A'},
@@ -277,41 +278,127 @@ def parse_match(m, s, league_code):
         log_msg(f"[ERROR] Errore parsing match: {e}", level="ERROR")
         return None
 
+# def build_global_dataset(leagues, seasons_train, seasons_curr, debug_mds):
+#     log_msg("\n[1] COSTRUZIONE DATASET GLOBALE (IT/EN/ES)...")
+#     log_msg("-" * 80)
+#     all_rows = []
+#     try:
+#         for league in leagues:
+#             l_code = league['code']
+#             l_id = league['id']
+#             current_md = debug_mds.get(l_code, 10)
+#             for s in seasons_train:
+#                 matches = fetch_matches(l_id, s, league['name'])
+#                 for m in matches:
+#                     if m["status"] in ["FINISHED", "LIVE"]:
+#                         parsed = parse_match(m, s, l_code)
+#                         if parsed:
+#                             all_rows.append(parsed)
+#             for s in seasons_curr:
+#                 matches = fetch_matches(l_id, s, league['name'])
+#                 count_curr = 0
+#                 for m in matches:
+#                     if m["status"] in ["FINISHED", "LIVE"]:
+#                         if m.get("matchday", 0) <= current_md:
+#                             parsed = parse_match(m, s, l_code)
+#                             if parsed:
+#                                 all_rows.append(parsed)
+#                                 count_curr += 1
+#                 log_msg(f" -> {league['name']}: {count_curr} partite correnti caricate.")
+#         df = pd.DataFrame(all_rows)
+#         if not df.empty:
+#             df["date"] = pd.to_datetime(df["date"])
+#         log_msg(f"[OK] TOTALE GLOBALE: {len(df)} partite pronte per l'analisi.\n")
+#         return df
+#     except Exception as e:
+#         log_msg(f"[ERROR] Errore costruzione dataset: {e}", level="ERROR")
+#         return pd.DataFrame()
+
 def build_global_dataset(leagues, seasons_train, seasons_curr, debug_mds):
-    log_msg("\n[1] COSTRUZIONE DATASET GLOBALE (IT/EN/ES)...")
+    log_msg("\n[1] COSTRUZIONE DATASET GLOBALE (CACHE SYSTEM)...")
     log_msg("-" * 80)
-    all_rows = []
-    try:
+    
+    CACHE_FILE = "history_cache.csv"
+    all_train_rows = []
+    
+    # --- PARTE 1: GESTIONE STORICO (CACHE) ---
+    if os.path.exists(CACHE_FILE):
+        log_msg(f"[CACHE] Trovato file '{CACHE_FILE}'. Caricamento dati storici da locale...")
+        try:
+            df_train = pd.read_csv(CACHE_FILE)
+            # Riconvertiamo la data in datetime perché il CSV la salva come stringa
+            df_train["date"] = pd.to_datetime(df_train["date"])
+            log_msg(f"[CACHE] Caricati {len(df_train)} match storici dal file.")
+        except Exception as e:
+            log_msg(f"[ERROR] Errore lettura cache ({e}). Riscarico tutto.", level="ERROR")
+            df_train = pd.DataFrame()
+    else:
+        df_train = pd.DataFrame()
+
+    # Se il dataframe storic è vuoto (o non esisteva il file), scarichiamo dall'API
+    if df_train.empty:
+        log_msg("[API] Scaricamento stagioni passate (TRAIN) da API...")
         for league in leagues:
             l_code = league['code']
             l_id = league['id']
-            current_md = debug_mds.get(l_code, 10)
             for s in seasons_train:
                 matches = fetch_matches(l_id, s, league['name'])
                 for m in matches:
                     if m["status"] in ["FINISHED", "LIVE"]:
                         parsed = parse_match(m, s, l_code)
                         if parsed:
-                            all_rows.append(parsed)
+                            all_train_rows.append(parsed)
+        
+        df_train = pd.DataFrame(all_train_rows)
+        if not df_train.empty:
+            # Salviamo su file per la prossima volta
+            try:
+                df_train.to_csv(CACHE_FILE, index=False)
+                log_msg(f"[CACHE] Salvato file '{CACHE_FILE}' con {len(df_train)} match.")
+            except Exception as e:
+                log_msg(f"[WARN] Impossibile salvare cache: {e}", level="WARNING")
+
+    # --- PARTE 2: GESTIONE STAGIONE CORRENTE (SEMPRE FRESH) ---
+    log_msg("[API] Scaricamento stagione CORRENTE (2025) per dati aggiornati...")
+    all_curr_rows = []
+    try:
+        for league in leagues:
+            l_code = league['code']
+            l_id = league['id']
+            current_md = debug_mds.get(l_code, 10)
+            
             for s in seasons_curr:
                 matches = fetch_matches(l_id, s, league['name'])
                 count_curr = 0
                 for m in matches:
                     if m["status"] in ["FINISHED", "LIVE"]:
+                        # Carichiamo solo fino alla giornata indicata o tutto se finito
                         if m.get("matchday", 0) <= current_md:
                             parsed = parse_match(m, s, l_code)
                             if parsed:
-                                all_rows.append(parsed)
+                                all_curr_rows.append(parsed)
                                 count_curr += 1
-                log_msg(f" -> {league['name']}: {count_curr} partite correnti caricate.")
-        df = pd.DataFrame(all_rows)
-        if not df.empty:
-            df["date"] = pd.to_datetime(df["date"])
-        log_msg(f"[OK] TOTALE GLOBALE: {len(df)} partite pronte per l'analisi.\n")
-        return df
+                log_msg(f" -> {league['name']}: {count_curr} partite correnti scaricate.")
     except Exception as e:
-        log_msg(f"[ERROR] Errore costruzione dataset: {e}", level="ERROR")
-        return pd.DataFrame()
+        log_msg(f"[ERROR] Errore scaricamento current: {e}", level="ERROR")
+
+    df_curr = pd.DataFrame(all_curr_rows)
+
+    # --- PARTE 3: UNIONE ---
+    if not df_train.empty and not df_curr.empty:
+        df_final = pd.concat([df_train, df_curr], ignore_index=True)
+    elif not df_train.empty:
+        df_final = df_train
+    else:
+        df_final = df_curr
+
+    if not df_final.empty:
+        df_final["date"] = pd.to_datetime(df_final["date"])
+        df_final = df_final.sort_values('date').reset_index(drop=True)
+
+    log_msg(f"[OK] TOTALE GLOBALE: {len(df_final)} partite pronte (Storico + Corrente).\n")
+    return df_final
+
 
 def compute_elo(df, k=20):
     try:

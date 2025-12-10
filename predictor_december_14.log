@@ -1,0 +1,536 @@
+====================================================================================================
+[START] EUROPEAN PREDICTOR - V25 (ADVANCED PORTFOLIO)
+====================================================================================================
+
+[0] INIZIO SCANSIONE EUROPA (V25)...
+
+[1] COSTRUZIONE DATASET GLOBALE (IT/EN/ES)...
+--------------------------------------------------------------------------------
+[API] Scaricamento Serie A (2024)...
+[API] Scaricamento Serie A (2023)...
+[API] Scaricamento Serie A (2025)...
+ -> Serie A: 140 partite correnti caricate.
+[API] Scaricamento Premier League (2024)...
+[API] Scaricamento Premier League (2023)...
+[API] Scaricamento Premier League (2025)...
+ -> Premier League: 150 partite correnti caricate.
+[API] Scaricamento La Liga (2024)...
+[API] Scaricamento La Liga (2023)...
+[WAIT] Rate Limit Protection... attendo 57.3s
+[API] Scaricamento La Liga (2025)...
+ -> La Liga: 150 partite correnti caricate.
+[OK] TOTALE GLOBALE: 2720 partite pronte per l'analisi.
+
+[2] CALCOLO FEATURES MEGA (V23: 11 → 19 FEATURES)...
+[OK] Training Set Creato: 2720 campioni con 19 features.
+
+[3] TRAINING INTELLIGENZA ARTIFICIALE (V23 TUNED)...
+[STATS] Precisione Modello (Test Set): 0.488
+
+[4] ANALISI PARTITE FUTURE (TUTTE LE LEGHE)...
+[API] Scaricamento Serie A (2025)...
+ -> Serie A: 10 match trovati.
+[API] Scaricamento Premier League (2025)...
+ -> Premier League: 10 match trovati.
+[API] Scaricamento La Liga (2025)...
+ -> La Liga: 10 match trovati.
+
+====================================================================================================
+LEGA  | MATCH                               | PRED  | 1 %  | X %  | 2 %  | NG %
+====================================================================================================
+SA    | Lecce vs Pisa                       | 2     | 24   | 33   | 44   | 62  
+SA    | Torino vs Cremonese                 | X     | 33   | 42   | 25   | 40  
+SA    | Parma vs Lazio                      | 2     | 20   | 26   | 54   | 58  
+SA    | Atalanta vs Cagliari                | 1     | 46   | 34   | 20   | 71  
+SA    | Milan vs Sassuolo                   | 1     | 54   | 28   | 18   | 46  
+SA    | Fiorentina vs Verona                | 1     | 37   | 34   | 29   | 50  
+SA    | Udinese vs Napoli                   | 2     | 15   | 28   | 58   | 59  
+SA    | Genoa vs Inter                      | 2     | 12   | 22   | 66   | 54  
+SA    | Bologna vs Juventus                 | 1     | 40   | 39   | 21   | 51  
+SA    | Roma vs Como                        | 1     | 46   | 32   | 23   | 71  
+PL    | Chelsea vs Everton                  | 1     | 45   | 42   | 14   | 67  
+PL    | Liverpool vs Brighton               | 1     | 44   | 30   | 27   | 35  
+PL    | Burnley vs Fulham                   | 2     | 15   | 26   | 58   | 35  
+PL    | Arsenal vs Wolves                   | 1     | 79   | 13   | 7    | 80  
+PL    | Sunderland vs Newcastle             | X     | 33   | 34   | 33   | 38  
+PL    | Crystal Palace vs Man City          | 2     | 22   | 34   | 44   | 48  
+PL    | Nottingham vs Tottenham             | X     | 34   | 38   | 29   | 43  
+PL    | West Ham vs Aston Villa             | 2     | 15   | 24   | 61   | 39  
+PL    | Brentford vs Leeds                  | 1     | 54   | 25   | 21   | 35  
+PL    | Man United vs Bournemouth           | 1     | 41   | 35   | 23   | 33  
+PD    | Real Sociedad vs Girona             | 1     | 49   | 31   | 20   | 46  
+PD    | Atletico vs Valencia                | 1     | 75   | 16   | 9    | 74  
+PD    | Mallorca vs Elche                   | 2     | 23   | 37   | 40   | 52  
+PD    | Barcelona vs Osasuna                | 1     | 74   | 12   | 14   | 36  
+PD    | Getafe vs RCD Espanyol de           | 2     | 20   | 39   | 41   | 62  
+PD    | Sevilla vs Oviedo                   | X     | 33   | 46   | 22   | 54  
+PD    | Celta vs Athletic Club              | 2     | 26   | 28   | 45   | 51  
+PD    | Levante vs Villarreal               | 2     | 9    | 29   | 62   | 48  
+PD    | Deportivo Alavé vs Real Madrid      | 2     | 13   | 40   | 48   | 47  
+PD    | Rayo vs Real Betis                  | 2     | 21   | 36   | 43   | 47  
+[QUOTE] Assegnazione quote ai match (SNAI REALE)...
+[OK] Quote assegnate: 30 match
+
+[SCHEDINE V25] Generazione Portfolio Tiered Avanzato...
+[TIER 1] 🛡️ ULTRA SAFE - Doppie basse quote
+[TIER 2] 🏰 SAFE - Triple conservative
+[TIER 3] ⚖️ BALANCED - Acca equilibrata
+[TIER 4] 💎 VALUE - Multipla alto valore
+[TIER 5] 🚀 AGGRESSIVE - Long shot
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$$   PORTAFOGLIO INTELLIGENTE V25 (AI-OPTIMIZED)   $$
+$$   BUDGET: 100.0€ | ACCURACY: 48.8%   $$
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+====================================================================================================
+🛡️ TIER 1: IL BUNKER
+====================================================================================================
+Budget Tier: 30.00€ | Usato: 3.00€ | Rimanente: 27.00€
+
+  1. IL BUNKER 🛡️
+     Qualità: 63.3/100 | EV: 1.119 | ROI Teorico: 45.1%
+     Quota: 1.45 | Prob.: 77.1% | N° Gambe: 2
+     💰 PUNTATA: 1.50€ → VINCITA POTENZIALE: 2.18€
+     --------------------------------------------------------------------------------
+     1. [PD] Levante vs Villarreal                         [2X  ] @1.18
+     2. [PL] Burnley vs Fulham                             [2X  ] @1.23
+
+  2. IL BUNKER 🛡️
+     Qualità: 60.5/100 | EV: 1.057 | ROI Teorico: 56.2%
+     Quota: 1.56 | Prob.: 67.7% | N° Gambe: 2
+     💰 PUNTATA: 1.50€ → VINCITA POTENZIALE: 2.34€
+     --------------------------------------------------------------------------------
+     1. [SA] Parma vs Lazio                                [2X  ] @1.28
+     2. [PL] West Ham vs Aston Villa                       [2X  ] @1.22
+
+
+====================================================================================================
+🏰 TIER 2: IL TRINCERONE
+====================================================================================================
+Budget Tier: 25.00€ | Usato: 3.00€ | Rimanente: 22.00€
+
+  3. IL TRINCERONE 🏰
+     Qualità: 54.5/100 | EV: 1.746 | ROI Teorico: 432.9%
+     Quota: 5.33 | Prob.: 32.8% | N° Gambe: 3
+     💰 PUNTATA: 1.50€ → VINCITA POTENZIALE: 7.99€
+     --------------------------------------------------------------------------------
+     1. [SA] Fiorentina vs Verona                          [1X  ] @1.90
+     2. [PD] Getafe vs RCD Espanyol de Barcelona           [2X  ] @1.50
+     3. [SA] Torino vs Cremonese                           [GG  ] @1.87
+
+  4. IL TRINCERONE 🏰
+     Qualità: 53.8/100 | EV: 1.733 | ROI Teorico: 470.0%
+     Quota: 5.70 | Prob.: 30.4% | N° Gambe: 3
+     💰 PUNTATA: 1.50€ → VINCITA POTENZIALE: 8.55€
+     --------------------------------------------------------------------------------
+     1. [PD] Mallorca vs Elche                             [GG  ] @1.90
+     2. [SA] Bologna vs Juventus                           [1X  ] @1.50
+     3. [PD] Sevilla vs Oviedo                             [2X  ] @2.00
+
+
+====================================================================================================
+⚖️ TIER 3: LA BILANCIA
+====================================================================================================
+Budget Tier: 20.00€ | Usato: 3.00€ | Rimanente: 17.00€
+
+  5. LA BILANCIA ⚖️
+     Qualità: 50.9/100 | EV: 2.388 | ROI Teorico: 1672.1%
+     Quota: 17.72 | Prob.: 13.5% | N° Gambe: 4
+     💰 PUNTATA: 1.50€ → VINCITA POTENZIALE: 26.58€
+     --------------------------------------------------------------------------------
+     1. [PD] Rayo vs Real Betis                            [2   ] @2.75
+     2. [PL] Man United vs Bournemouth                     [2X  ] @1.93
+     3. [SA] Atalanta vs Cagliari                          [NG  ] @1.73
+     4. [SA] Udinese vs Napoli                             [2X  ] @1.93
+
+  6. LA BILANCIA ⚖️
+     Qualità: 48.2/100 | EV: 2.230 | ROI Teorico: 1686.8%
+     Quota: 17.87 | Prob.: 12.5% | N° Gambe: 4
+     💰 PUNTATA: 1.50€ → VINCITA POTENZIALE: 26.80€
+     --------------------------------------------------------------------------------
+     1. [PL] Chelsea vs Everton                            [NG  ] @1.95
+     2. [PD] Celta vs Athletic Club                        [2   ] @2.80
+     3. [SA] Roma vs Como                                  [NG  ] @1.87
+     4. [PL] Nottingham vs Tottenham                       [1X  ] @1.75
+
+====================================================================================================
+RIEPILOGO PORTAFOGLIO
+====================================================================================================
+Schedine Proposte: 6
+Budget Totale Impiegato: 9.00€ (9.0% del budget)
+Budget Rimanente: 91.00€
+Expected Value Medio: 1.71
+ROI Atteso: 727.2%
+====================================================================================================
+✅ CONSIGLIO: Distribuisci le schedine su più settimane per diversificare il rischio.
+✅ GESTIONE: Se raggiungi +30% di profitto, reinvesti solo il 50% degli utili.
+====================================================================================================
+
+
+[DONE] Analisi Completata.
+====================================================================================================
+[START] EUROPEAN PREDICTOR - V25 (ADVANCED PORTFOLIO)
+====================================================================================================
+
+[0] INIZIO SCANSIONE EUROPA (V25)...
+
+[1] COSTRUZIONE DATASET GLOBALE (CACHE SYSTEM)...
+--------------------------------------------------------------------------------
+[API] Scaricamento stagioni passate (TRAIN) da API...
+[API] Scaricamento Serie A (2024)...
+[API] Scaricamento Serie A (2023)...
+[API] Scaricamento Premier League (2024)...
+[API] Scaricamento Premier League (2023)...
+[API] Scaricamento La Liga (2024)...
+[API] Scaricamento La Liga (2023)...
+[CACHE] Salvato file 'history_cache.csv' con 2280 match.
+[API] Scaricamento stagione CORRENTE (2025) per dati aggiornati...
+[API] Scaricamento Serie A (2025)...
+ -> Serie A: 140 partite correnti scaricate.
+[API] Scaricamento Premier League (2025)...
+ -> Premier League: 150 partite correnti scaricate.
+[WAIT] Rate Limit Protection... attendo 58.6s
+[API] Scaricamento La Liga (2025)...
+ -> La Liga: 150 partite correnti scaricate.
+[OK] TOTALE GLOBALE: 2720 partite pronte (Storico + Corrente).
+
+[2] CALCOLO FEATURES MEGA (V23: 11 → 19 FEATURES)...
+[OK] Training Set Creato: 2720 campioni con 19 features.
+
+[3] TRAINING INTELLIGENZA ARTIFICIALE (V23 TUNED)...
+[STATS] Precisione Modello (Test Set): 0.485
+
+[4] ANALISI PARTITE FUTURE (TUTTE LE LEGHE)...
+[API] Scaricamento Serie A (2025)...
+ -> Serie A: 10 match trovati.
+[API] Scaricamento Premier League (2025)...
+ -> Premier League: 10 match trovati.
+[API] Scaricamento La Liga (2025)...
+ -> La Liga: 10 match trovati.
+
+====================================================================================================
+LEGA  | MATCH                               | PRED  | 1 %  | X %  | 2 %  | NG %
+====================================================================================================
+SA    | Lecce vs Pisa                       | 2     | 23   | 35   | 41   | 62  
+SA    | Torino vs Cremonese                 | X     | 33   | 41   | 26   | 40  
+SA    | Parma vs Lazio                      | 2     | 20   | 24   | 56   | 58  
+SA    | Atalanta vs Cagliari                | 1     | 46   | 35   | 19   | 71  
+SA    | Milan vs Sassuolo                   | 1     | 57   | 27   | 16   | 46  
+SA    | Fiorentina vs Verona                | 1     | 39   | 34   | 27   | 50  
+SA    | Udinese vs Napoli                   | 2     | 16   | 28   | 57   | 59  
+SA    | Genoa vs Inter                      | 2     | 12   | 22   | 66   | 54  
+SA    | Bologna vs Juventus                 | 1     | 40   | 39   | 20   | 51  
+SA    | Roma vs Como                        | 1     | 46   | 30   | 24   | 71  
+PL    | Chelsea vs Everton                  | 1     | 46   | 39   | 14   | 67  
+PL    | Liverpool vs Brighton               | 1     | 43   | 29   | 29   | 35  
+PL    | Burnley vs Fulham                   | 2     | 18   | 25   | 57   | 35  
+PL    | Arsenal vs Wolves                   | 1     | 79   | 13   | 8    | 80  
+PL    | Sunderland vs Newcastle             | 2     | 31   | 34   | 34   | 38  
+PL    | Crystal Palace vs Man City          | 2     | 23   | 32   | 45   | 48  
+PL    | Nottingham vs Tottenham             | X     | 33   | 40   | 27   | 43  
+PL    | West Ham vs Aston Villa             | 2     | 14   | 25   | 61   | 39  
+PL    | Brentford vs Leeds                  | 1     | 54   | 27   | 20   | 35  
+PL    | Man United vs Bournemouth           | 1     | 43   | 33   | 24   | 33  
+PD    | Real Sociedad vs Girona             | 1     | 48   | 31   | 21   | 46  
+PD    | Atletico vs Valencia                | 1     | 74   | 18   | 8    | 74  
+PD    | Mallorca vs Elche                   | 2     | 21   | 38   | 40   | 52  
+PD    | Barcelona vs Osasuna                | 1     | 78   | 11   | 11   | 36  
+PD    | Getafe vs RCD Espanyol de           | 2     | 19   | 37   | 44   | 62  
+PD    | Sevilla vs Oviedo                   | X     | 33   | 45   | 22   | 54  
+PD    | Celta vs Athletic Club              | 2     | 23   | 28   | 49   | 51  
+PD    | Levante vs Villarreal               | 2     | 7    | 28   | 65   | 48  
+PD    | Deportivo Alavé vs Real Madrid      | 2     | 11   | 42   | 46   | 47  
+PD    | Rayo vs Real Betis                  | 2     | 22   | 37   | 41   | 47  
+[QUOTE] Assegnazione quote ai match (SNAI REALE)...
+[OK] Quote assegnate: 30 match
+
+[SCHEDINE V25] Generazione Portfolio Tiered Avanzato...
+[TIER 1] 🛡️ ULTRA SAFE - Doppie basse quote
+[TIER 2] 🏰 SAFE - Triple conservative
+[TIER 3] ⚖️ BALANCED - Acca equilibrata
+[TIER 4] 💎 VALUE - Multipla alto valore
+[TIER 5] 🚀 AGGRESSIVE - Long shot
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$$   PORTAFOGLIO INTELLIGENTE V25 (AI-OPTIMIZED)   $$
+$$   BUDGET: 100.0€ | ACCURACY: 48.5%   $$
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+====================================================================================================
+🛡️ TIER 1: IL BUNKER
+====================================================================================================
+Budget Tier: 30.00€ | Usato: 1.50€ | Rimanente: 28.50€
+
+  1. IL BUNKER 🛡️
+     Qualità: 61.2/100 | EV: 1.096 | ROI Teorico: 60.0%
+     Quota: 1.60 | Prob.: 68.5% | N° Gambe: 2
+     💰 PUNTATA: 1.50€ → VINCITA POTENZIALE: 2.40€
+     --------------------------------------------------------------------------------
+     1. [SA] Parma vs Lazio                                [2X  ] @1.28
+     2. [PL] West Ham vs Aston Villa                       [2X  ] @1.25
+
+
+====================================================================================================
+🏰 TIER 2: IL TRINCERONE
+====================================================================================================
+Budget Tier: 25.00€ | Usato: 3.00€ | Rimanente: 22.00€
+
+  2. IL TRINCERONE 🏰
+     Qualità: 50.4/100 | EV: 1.524 | ROI Teorico: 407.4%
+     Quota: 5.07 | Prob.: 30.0% | N° Gambe: 3
+     💰 PUNTATA: 1.50€ → VINCITA POTENZIALE: 7.61€
+     --------------------------------------------------------------------------------
+     1. [SA] Lecce vs Pisa                                 [GG  ] @2.05
+     2. [PD] Levante vs Villarreal                         [2   ] @1.65
+     3. [PD] Getafe vs RCD Espanyol de Barcelona           [2X  ] @1.50
+
+  3. IL TRINCERONE 🏰
+     Qualità: 45.5/100 | EV: 1.338 | ROI Teorico: 557.3%
+     Quota: 6.57 | Prob.: 20.4% | N° Gambe: 3
+     💰 PUNTATA: 1.50€ → VINCITA POTENZIALE: 9.86€
+     --------------------------------------------------------------------------------
+     1. [PL] Burnley vs Fulham                             [2   ] @1.90
+     2. [SA] Bologna vs Juventus                           [GG  ] @1.85
+     3. [SA] Roma vs Como                                  [NG  ] @1.87
+
+
+====================================================================================================
+⚖️ TIER 3: LA BILANCIA
+====================================================================================================
+Budget Tier: 20.00€ | Usato: 3.00€ | Rimanente: 17.00€
+
+  4. LA BILANCIA ⚖️
+     Qualità: 53.1/100 | EV: 3.271 | ROI Teorico: 2004.9%
+     Quota: 21.05 | Prob.: 15.5% | N° Gambe: 4
+     💰 PUNTATA: 1.50€ → VINCITA POTENZIALE: 31.57€
+     --------------------------------------------------------------------------------
+     1. [PD] Celta vs Athletic Club                        [2   ] @2.80
+     2. [PD] Real Sociedad vs Girona                       [2X  ] @2.05
+     3. [SA] Fiorentina vs Verona                          [1X  ] @1.90
+     4. [SA] Udinese vs Napoli                             [2X  ] @1.93
+
+  5. LA BILANCIA ⚖️
+     Qualità: 38.2/100 | EV: 1.595 | ROI Teorico: 1072.0%
+     Quota: 11.72 | Prob.: 13.6% | N° Gambe: 4
+     💰 PUNTATA: 1.50€ → VINCITA POTENZIALE: 17.58€
+     --------------------------------------------------------------------------------
+     1. [PL] Man United vs Bournemouth                     [2X  ] @1.93
+     2. [PD] Sevilla vs Oviedo                             [GG  ] @1.95
+     3. [SA] Atalanta vs Cagliari                          [NG  ] @1.73
+     4. [SA] Torino vs Cremonese                           [2X  ] @1.80
+
+
+====================================================================================================
+💎 TIER 4: IL CACCIATORE
+====================================================================================================
+Budget Tier: 15.00€ | Usato: 1.50€ | Rimanente: 13.50€
+
+  6. IL CACCIATORE 💎
+     Qualità: 37.5/100 | EV: 2.262 | ROI Teorico: 3479.0%
+     Quota: 35.79 | Prob.: 6.3% | N° Gambe: 5
+     💰 PUNTATA: 1.50€ → VINCITA POTENZIALE: 53.69€
+     --------------------------------------------------------------------------------
+     1. [PL] Chelsea vs Everton                            [NG  ] @1.95
+     2. [PD] Mallorca vs Elche                             [GG  ] @1.90
+     3. [PL] Crystal Palace vs Man City                    [NG  ] @2.30
+     4. [PL] Liverpool vs Brighton                         [2X  ] @2.10
+     5. [SA] Milan vs Sassuolo                             [GG  ] @2.00
+
+====================================================================================================
+RIEPILOGO PORTAFOGLIO
+====================================================================================================
+Schedine Proposte: 6
+Budget Totale Impiegato: 9.00€ (9.0% del budget)
+Budget Rimanente: 91.00€
+Expected Value Medio: 1.85
+ROI Atteso: 1263.4%
+====================================================================================================
+✅ CONSIGLIO: Distribuisci le schedine su più settimane per diversificare il rischio.
+✅ GESTIONE: Se raggiungi +30% di profitto, reinvesti solo il 50% degli utili.
+====================================================================================================
+
+
+[DONE] Analisi Completata.
+====================================================================================================
+[START] EUROPEAN PREDICTOR - V25 (ADVANCED PORTFOLIO)
+====================================================================================================
+
+[0] INIZIO SCANSIONE EUROPA (V25)...
+
+[1] COSTRUZIONE DATASET GLOBALE (CACHE SYSTEM)...
+--------------------------------------------------------------------------------
+[CACHE] Trovato file 'history_cache.csv'. Caricamento dati storici da locale...
+[CACHE] Caricati 2280 match storici dal file.
+[API] Scaricamento stagione CORRENTE (2025) per dati aggiornati...
+[API] Scaricamento Serie A (2025)...
+ -> Serie A: 140 partite correnti scaricate.
+[API] Scaricamento Premier League (2025)...
+ -> Premier League: 150 partite correnti scaricate.
+[API] Scaricamento La Liga (2025)...
+ -> La Liga: 150 partite correnti scaricate.
+[OK] TOTALE GLOBALE: 2720 partite pronte (Storico + Corrente).
+
+[2] CALCOLO FEATURES MEGA (V23: 11 → 19 FEATURES)...
+[OK] Training Set Creato: 2720 campioni con 19 features.
+
+[3] TRAINING INTELLIGENZA ARTIFICIALE (V23 TUNED)...
+[STATS] Precisione Modello (Test Set): 0.485
+
+[4] ANALISI PARTITE FUTURE (TUTTE LE LEGHE)...
+[API] Scaricamento Serie A (2025)...
+ -> Serie A: 10 match trovati.
+[API] Scaricamento Premier League (2025)...
+ -> Premier League: 10 match trovati.
+[API] Scaricamento La Liga (2025)...
+ -> La Liga: 10 match trovati.
+
+====================================================================================================
+LEGA  | MATCH                               | PRED  | 1 %  | X %  | 2 %  | NG %
+====================================================================================================
+SA    | Lecce vs Pisa                       | 2     | 23   | 35   | 41   | 62  
+SA    | Torino vs Cremonese                 | X     | 33   | 41   | 26   | 40  
+SA    | Parma vs Lazio                      | 2     | 20   | 24   | 56   | 58  
+SA    | Atalanta vs Cagliari                | 1     | 46   | 35   | 19   | 71  
+SA    | Milan vs Sassuolo                   | 1     | 57   | 27   | 16   | 46  
+SA    | Fiorentina vs Verona                | 1     | 39   | 34   | 27   | 50  
+SA    | Udinese vs Napoli                   | 2     | 16   | 28   | 57   | 59  
+SA    | Genoa vs Inter                      | 2     | 12   | 22   | 66   | 54  
+SA    | Bologna vs Juventus                 | 1     | 40   | 39   | 20   | 51  
+SA    | Roma vs Como                        | 1     | 46   | 30   | 24   | 71  
+PL    | Chelsea vs Everton                  | 1     | 46   | 39   | 14   | 67  
+PL    | Liverpool vs Brighton               | 1     | 43   | 29   | 29   | 35  
+PL    | Burnley vs Fulham                   | 2     | 18   | 25   | 57   | 35  
+PL    | Arsenal vs Wolves                   | 1     | 79   | 13   | 8    | 80  
+PL    | Sunderland vs Newcastle             | 2     | 31   | 34   | 34   | 38  
+PL    | Crystal Palace vs Man City          | 2     | 23   | 32   | 45   | 48  
+PL    | Nottingham vs Tottenham             | X     | 33   | 40   | 27   | 43  
+PL    | West Ham vs Aston Villa             | 2     | 14   | 25   | 61   | 39  
+PL    | Brentford vs Leeds                  | 1     | 54   | 27   | 20   | 35  
+PL    | Man United vs Bournemouth           | 1     | 43   | 33   | 24   | 33  
+PD    | Real Sociedad vs Girona             | 1     | 48   | 31   | 21   | 46  
+PD    | Atletico vs Valencia                | 1     | 74   | 18   | 8    | 74  
+PD    | Mallorca vs Elche                   | 2     | 21   | 38   | 40   | 52  
+PD    | Barcelona vs Osasuna                | 1     | 78   | 11   | 11   | 36  
+PD    | Getafe vs RCD Espanyol de           | 2     | 19   | 37   | 44   | 62  
+PD    | Sevilla vs Oviedo                   | X     | 33   | 45   | 22   | 54  
+PD    | Celta vs Athletic Club              | 2     | 23   | 28   | 49   | 51  
+PD    | Levante vs Villarreal               | 2     | 7    | 28   | 65   | 48  
+PD    | Deportivo Alavé vs Real Madrid      | 2     | 11   | 42   | 46   | 47  
+PD    | Rayo vs Real Betis                  | 2     | 22   | 37   | 41   | 47  
+[QUOTE] Assegnazione quote ai match (SNAI REALE)...
+[OK] Quote assegnate: 30 match
+
+[SCHEDINE V25] Generazione Portfolio Tiered Avanzato...
+[TIER 1] 🛡️ ULTRA SAFE - Doppie basse quote
+[TIER 2] 🏰 SAFE - Triple conservative
+[TIER 3] ⚖️ BALANCED - Acca equilibrata
+[TIER 4] 💎 VALUE - Multipla alto valore
+[TIER 5] 🚀 AGGRESSIVE - Long shot
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$$   PORTAFOGLIO INTELLIGENTE V25 (AI-OPTIMIZED)   $$
+$$   BUDGET: 100.0€ | ACCURACY: 48.5%   $$
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+====================================================================================================
+🛡️ TIER 1: IL BUNKER
+====================================================================================================
+Budget Tier: 30.00€ | Usato: 1.50€ | Rimanente: 28.50€
+
+  1. IL BUNKER 🛡️
+     Qualità: 62.6/100 | EV: 1.116 | ROI Teorico: 51.0%
+     Quota: 1.51 | Prob.: 73.9% | N° Gambe: 2
+     💰 PUNTATA: 1.50€ → VINCITA POTENZIALE: 2.27€
+     --------------------------------------------------------------------------------
+     1. [PD] Levante vs Villarreal                         [2X  ] @1.18
+     2. [SA] Parma vs Lazio                                [2X  ] @1.28
+
+
+====================================================================================================
+🏰 TIER 2: IL TRINCERONE
+====================================================================================================
+Budget Tier: 25.00€ | Usato: 3.00€ | Rimanente: 22.00€
+
+  2. IL TRINCERONE 🏰
+     Qualità: 50.4/100 | EV: 1.510 | ROI Teorico: 385.3%
+     Quota: 4.85 | Prob.: 31.1% | N° Gambe: 3
+     💰 PUNTATA: 1.50€ → VINCITA POTENZIALE: 7.28€
+     --------------------------------------------------------------------------------
+     1. [SA] Atalanta vs Cagliari                          [NG  ] @1.73
+     2. [SA] Roma vs Como                                  [NG  ] @1.87
+     3. [PD] Getafe vs RCD Espanyol de Barcelona           [2X  ] @1.50
+
+  3. IL TRINCERONE 🏰
+     Qualità: 48.6/100 | EV: 1.472 | ROI Teorico: 483.3%
+     Quota: 5.83 | Prob.: 25.2% | N° Gambe: 3
+     💰 PUNTATA: 1.50€ → VINCITA POTENZIALE: 8.75€
+     --------------------------------------------------------------------------------
+     1. [PL] Man United vs Bournemouth                     [2X  ] @1.93
+     2. [PD] Sevilla vs Oviedo                             [GG  ] @1.95
+     3. [SA] Lecce vs Pisa                                 [2X  ] @1.55
+
+
+====================================================================================================
+⚖️ TIER 3: LA BILANCIA
+====================================================================================================
+Budget Tier: 20.00€ | Usato: 3.00€ | Rimanente: 17.00€
+
+  4. LA BILANCIA ⚖️
+     Qualità: 52.6/100 | EV: 2.515 | ROI Teorico: 1829.5%
+     Quota: 19.29 | Prob.: 13.0% | N° Gambe: 4
+     💰 PUNTATA: 1.50€ → VINCITA POTENZIALE: 28.94€
+     --------------------------------------------------------------------------------
+     1. [PD] Celta vs Athletic Club                        [2   ] @2.80
+     2. [SA] Bologna vs Juventus                           [GG  ] @1.85
+     3. [PL] Crystal Palace vs Man City                    [1X  ] @1.93
+     4. [SA] Udinese vs Napoli                             [2X  ] @1.93
+
+  5. LA BILANCIA ⚖️
+     Qualità: 47.7/100 | EV: 2.204 | ROI Teorico: 1719.4%
+     Quota: 18.19 | Prob.: 12.1% | N° Gambe: 4
+     💰 PUNTATA: 1.50€ → VINCITA POTENZIALE: 27.29€
+     --------------------------------------------------------------------------------
+     1. [SA] Milan vs Sassuolo                             [2X  ] @2.80
+     2. [PL] Burnley vs Fulham                             [2   ] @1.90
+     3. [SA] Torino vs Cremonese                           [2X  ] @1.80
+     4. [SA] Fiorentina vs Verona                          [1X  ] @1.90
+
+
+====================================================================================================
+💎 TIER 4: IL CACCIATORE
+====================================================================================================
+Budget Tier: 15.00€ | Usato: 1.50€ | Rimanente: 13.50€
+
+  6. IL CACCIATORE 💎
+     Qualità: 40.5/100 | EV: 2.445 | ROI Teorico: 3556.8%
+     Quota: 36.57 | Prob.: 6.7% | N° Gambe: 5
+     💰 PUNTATA: 1.50€ → VINCITA POTENZIALE: 54.85€
+     --------------------------------------------------------------------------------
+     1. [PL] Chelsea vs Everton                            [NG  ] @1.95
+     2. [PL] Liverpool vs Brighton                         [2X  ] @2.10
+     3. [PD] Deportivo Alavés vs Real Madrid               [1X  ] @2.35
+     4. [PD] Mallorca vs Elche                             [GG  ] @1.90
+     5. [PL] West Ham vs Aston Villa                       [2   ] @2.00
+
+====================================================================================================
+RIEPILOGO PORTAFOGLIO
+====================================================================================================
+Schedine Proposte: 6
+Budget Totale Impiegato: 9.00€ (9.0% del budget)
+Budget Rimanente: 91.00€
+Expected Value Medio: 1.88
+ROI Atteso: 1337.6%
+====================================================================================================
+✅ CONSIGLIO: Distribuisci le schedine su più settimane per diversificare il rischio.
+✅ GESTIONE: Se raggiungi +30% di profitto, reinvesti solo il 50% degli utili.
+====================================================================================================
+
+
+[DONE] Analisi Completata.
