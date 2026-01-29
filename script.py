@@ -13,69 +13,108 @@ FEATURES:
 ✅ Intelligent Portfolio Diversification
 """
 
-import requests
-import pandas as pd
-import numpy as np
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score
-from scipy.stats import poisson
-import itertools
-import warnings
 import sys
 import io
-import os 
-import traceback
+import os
 import time
+import traceback
+import warnings
+import random
+import itertools
 from datetime import datetime, timedelta
 from difflib import SequenceMatcher
 
+import requests
+import pandas as pd
+import numpy as np
+from scipy.stats import poisson
+
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score
+from sklearn.calibration import CalibratedClassifierCV
+
+from sklearn.linear_model import LogisticRegression
+
+from sklearn.ensemble import (
+    RandomForestClassifier,
+    AdaBoostClassifier,
+    GradientBoostingClassifier,
+    VotingClassifier,
+    StackingClassifier
+)
 warnings.filterwarnings("ignore")
+
 try:
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 except:
     pass
 
+DEBUG_MODE = True
+
+# Last matchday played
+DEBUG_MATCHDAYS = {'SA': 15, 'PL': 16, 'PD': 16, 'BL1': 14, 'FL1': 16}
+
 def get_odds_mapping():
     return {
         'SA': [
-            {'1': 2.40, 'X': 2.90, '2': 3.35, '1X': 1.30, '2X': 1.55, 'GG': 2.05, 'NG': 1.70},  # Lecce - Pisa
-            {'1': 1.95, 'X': 3.20, '2': 4.25, '1X': 1.21, '2X': 1.80, 'GG': 1.87, 'NG': 1.85},  # Torino - Cremonese
-            {'1': 3.55, 'X': 3.25, '2': 2.10, '1X': 1.70, '2X': 1.28, 'GG': 1.90, 'NG': 1.77},  # Parma - Lazio
-            {'1': 1.33, 'X': 5.25, '2': 8.50, '1X': 1.06, '2X': 3.20, 'GG': 2.00, 'NG': 1.73},  # Atalanta - Cagliari
-            {'1': 1.40, 'X': 4.60, '2': 7.50, '1X': 1.06, '2X': 2.80, 'GG': 2.00, 'NG': 1.73},  # Milan - Sassuolo
-            {'1': 4.40, 'X': 3.40, '2': 1.85, '1X': 1.90, '2X': 1.18, 'GG': 2.00, 'NG': 1.70},  # Udinese - Napoli
-            {'1': 1.80, 'X': 3.40, '2': 4.40, '1X': 1.18, '2X': 1.93, 'GG': 1.93, 'NG': 1.77},  # Fiorentina - Verona
-            {'1': 6.25, 'X': 4.10, '2': 1.50, '1X': 2.45, '2X': 1.09, 'GG': 2.00, 'NG': 1.73},  # Genoa - Inter
-            {'1': 2.85, 'X': 3.15, '2': 2.50, '1X': 1.50, '2X': 1.40, 'GG': 1.85, 'NG': 1.87},  # Bologna - Juventus
-            {'1': 2.10, 'X': 3.15, '2': 3.60, '1X': 1.25, '2X': 1.67, 'GG': 1.85, 'NG': 1.87},  # Roma - Como
+            {'home': 'Lazio', 'away': 'Cremonese', '1': 1.60, 'X': 3.80, '2': 5.75, '1X': 1.12, '2X': 2.25, 'GG': 1.95, 'NG': 1.77},
+            {'home': 'Juventus', 'away': 'Roma', '1': 2.05, 'X': 3.20, '2': 3.90, '1X': 1.24, '2X': 1.73, 'GG': 1.95, 'NG': 1.77},
+            {'home': 'Cagliari', 'away': 'Pisa', '1': 2.10, 'X': 3.15, '2': 3.55, '1X': 1.27, '2X': 1.67, 'GG': 1.97, 'NG': 1.77},
+            {'home': 'Sassuolo', 'away': 'Torino', '1': 2.30, 'X': 3.05, '2': 3.25, '1X': 1.30, '2X': 1.57, 'GG': 1.80, 'NG': 1.90},
+            {'home': 'Fiorentina', 'away': 'Udinese', '1': 2.15, 'X': 3.20, '2': 3.40, '1X': 1.30, '2X': 1.65, 'GG': 1.80, 'NG': 1.90},
+            {'home': 'Genoa', 'away': 'Atalanta', '1': 3.90, 'X': 3.35, '2': 1.92, '1X': 1.80, '2X': 1.22, 'GG': 1.85, 'NG': 1.87},
+            {'home': 'Napoli', 'away': 'Parma', '1': 0, 'X': 0, '2': 0, '1X': 0, '2X': 0, 'GG': 0, 'NG': 0},
+            {'home': 'Inter', 'away': 'Lecce', '1': 0, 'X': 0, '2': 0, '1X': 0, '2X': 0, 'GG': 0, 'NG': 0},
+            {'home': 'Verona', 'away': 'Bologna', '1': 0, 'X': 0, '2': 0, '1X': 0, '2X': 0, 'GG': 0, 'NG': 0},
+            {'home': 'Como', 'away': 'Milan', '1': 0, 'X': 0, '2': 0, '1X': 0, '2X': 0, 'GG': 0, 'NG': 0},
         ],
         'PL': [
-            {'1': 1.65, 'X': 3.85, '2': 5.00, '1X': 1.14, '2X': 2.15, 'GG': 1.77, 'NG': 1.95},  # Chelsea - Everton
-            {'1': 1.67, 'X': 4.10, '2': 4.40, '1X': 1.18, '2X': 2.10, 'GG': 1.50, 'NG': 2.45},  # Liverpool - Brighton
-            {'1': 3.85, 'X': 3.50, '2': 1.90, '1X': 1.82, '2X': 1.23, 'GG': 1.80, 'NG': 1.90},  # Burnley - Fulham
-            {'1': 1.14, 'X': 7.50, '2': 18.00, '1X': 1.01, '2X': 5.00, 'GG': 2.65, 'NG': 1.40}, # Arsenal - Wolves (1X stimato)
-            {'1': 3.25, 'X': 3.25, '2': 2.20, '1X': 1.60, '2X': 1.30, 'GG': 1.67, 'NG': 2.10},  # Sunderland - Newcastle
-            {'1': 3.90, 'X': 3.80, '2': 1.80, '1X': 1.93, '2X': 1.22, 'GG': 1.55, 'NG': 2.30},  # C. Palace - Man City
-            {'1': 2.45, 'X': 3.30, '2': 2.75, '1X': 1.40, '2X': 1.50, 'GG': 1.70, 'NG': 2.05},  # N. Forest - Tottenham
-            {'1': 3.60, 'X': 3.50, '2': 2.00, '1X': 1.75, '2X': 1.25, 'GG': 1.63, 'NG': 2.15},  # West Ham - Aston Villa
-            {'1': 1.92, 'X': 3.50, '2': 3.75, '1X': 1.24, '2X': 1.80, 'GG': 1.70, 'NG': 2.00},  # Brentford - Leeds
-            {'1': 1.80, 'X': 4.00, '2': 3.80, '1X': 1.23, '2X': 1.93, 'GG': 1.50, 'NG': 2.45},  # Man United - Bournemouth
+            {'home': 'Newcastle', 'away': 'Chelsea', '1': 2.65, 'X': 3.50, '2': 2.50, '1X': 1.50, '2X': 1.43, 'GG': 1.53, 'NG': 2.35},
+            {'home': 'Bournemouth', 'away': 'Burnley', '1': 1.45, 'X': 4.50, '2': 6.25, '1X': 1.09, '2X': 2.60, 'GG': 1.77, 'NG': 1.92},
+            {'home': 'Brighton', 'away': 'Sunderland', '1': 1.60, 'X': 3.90, '2': 5.00, '1X': 1.14, '2X': 2.20, 'GG': 1.75, 'NG': 1.97},
+            {'home': 'Wolves', 'away': 'Brentford', '1': 3.60, 'X': 3.45, '2': 2.00, '1X': 1.75, '2X': 1.25, 'GG': 1.73, 'NG': 2.00},
+            {'home': 'Man City', 'away': 'West Ham', '1': 1.19, 'X': 7.25, '2': 11.00, '1X': 1.02, '2X': 4.25, 'GG': 1.82, 'NG': 1.90},
+            {'home': 'Tottenham', 'away': 'Liverpool', '1': 3.35, 'X': 3.70, '2': 2.00, '1X': 1.75, '2X': 1.30, 'GG': 1.53, 'NG': 2.35},
+            {'home': 'Leeds', 'away': 'Crystal Palace', '1': 2.55, 'X': 3.25, '2': 2.70, '1X': 1.40, '2X': 1.47, 'GG': 1.77, 'NG': 1.95},
+            {'home': 'Everton', 'away': 'Arsenal', '1': 5.50, 'X': 3.85, '2': 1.60, '1X': 2.20, '2X': 1.12, 'GG': 2.00, 'NG': 1.73},
+            {'home': 'Aston Villa', 'away': 'Man United', '1': 2.10, 'X': 3.60, '2': 3.20, '1X': 1.30, '2X': 1.67, 'GG': 1.50, 'NG': 2.40},
+            {'home': 'Fulham', 'away': 'Nottingham', '1': 2.25, 'X': 3.30, '2': 3.10, '1X': 1.33, '2X': 1.60, 'GG': 1.73, 'NG': 2.00},
         ],
         'PD': [
-            {'1': 1.70, 'X': 3.75, '2': 4.60, '1X': 1.17, '2X': 2.05, 'GG': 1.75, 'NG': 1.97},  # Real Sociedad - Girona
-            {'1': 1.30, 'X': 5.00, '2': 10.00, '1X': 1.03, '2X': 3.35, 'GG': 2.20, 'NG': 1.60}, # Atletico Madrid - Valencia
-            {'1': 2.40, 'X': 3.05, '2': 3.10, '1X': 1.33, '2X': 1.50, 'GG': 1.90, 'NG': 1.80},  # Maiorca - Elche
-            {'1': 1.20, 'X': 7.00, '2': 11.00, '1X': 1.02, '2X': 4.10, 'GG': 1.70, 'NG': 2.05}, # Barcellona - Osasuna
-            {'1': 2.45, 'X': 2.85, '2': 3.15, '1X': 1.32, '2X': 1.50, 'GG': 2.20, 'NG': 1.60},  # Getafe - Espanyol
-            {'1': 1.75, 'X': 3.45, '2': 4.90, '1X': 1.15, '2X': 2.00, 'GG': 1.95, 'NG': 1.77},  # Siviglia - Real Oviedo
-            {'1': 2.50, 'X': 3.15, '2': 2.80, '1X': 1.40, '2X': 1.50, 'GG': 1.80, 'NG': 1.90},  # Celta - Athletic Bilbao
-            {'1': 4.40, 'X': 4.25, '2': 1.65, '1X': 2.15, '2X': 1.18, 'GG': 1.57, 'NG': 2.30},  # Levante - Villarreal
-            {'1': 5.75, 'X': 4.00, '2': 1.55, '1X': 2.35, '2X': 1.11, 'GG': 1.70, 'NG': 2.00},  # Alaves - Real Madrid
-            {'1': 2.45, 'X': 3.35, '2': 2.75, '1X': 1.40, '2X': 1.50, 'GG': 1.70, 'NG': 2.05},  # Vallecano - Betis
+            {'home': 'Valencia', 'away': 'Mallorca', '1': 1.97, 'X': 3.25, '2': 4.00, '1X': 1.21, '2X': 1.77, 'GG': 1.95, 'NG': 1.77},
+            {'home': 'Oviedo', 'away': 'Celta', '1': 3.65, 'X': 3.40, '2': 2.00, '1X': 1.75, '2X': 1.25, 'GG': 1.90, 'NG': 1.82},
+            {'home': 'Levante', 'away': 'Real Sociedad', '1': 3.20, 'X': 3.40, '2': 2.15, '1X': 1.65, '2X': 1.30, 'GG': 1.67, 'NG': 2.05},
+            {'home': 'Osasuna', 'away': 'Alaves', '1': 2.25, 'X': 3.00, '2': 3.45, '1X': 1.27, '2X': 1.60, 'GG': 2.05, 'NG': 1.67},
+            {'home': 'Real Madrid', 'away': 'Sevilla', '1': 1.19, 'X': 6.75, '2': 12.00, '1X': 1.01, '2X': 4.25, 'GG': 1.87, 'NG': 1.85},
+            {'home': 'Girona', 'away': 'Atletico', '1': 4.60, 'X': 4.00, '2': 1.65, '1X': 2.10, '2X': 1.17, 'GG': 1.67, 'NG': 2.05},
+            {'home': 'Villarreal', 'away': 'Barcelona', '1': 3.25, 'X': 4.50, '2': 1.87, '1X': 1.85, '2X': 1.30, 'GG': 1.30, 'NG': 3.30},
+            {'home': 'Elche', 'away': 'Rayo', '1': 2.40, 'X': 3.10, '2': 3.00, '1X': 1.35, '2X': 1.50, 'GG': 1.93, 'NG': 1.77},
+            {'home': 'Real Betis', 'away': 'Getafe', '1': 1.70, 'X': 3.45, '2': 5.25, '1X': 1.13, '2X': 2.05, 'GG': 2.15, 'NG': 1.65},
+            {'home': 'Athletic Club', 'away': 'Espanyol', '1': 1.70, 'X': 3.50, '2': 5.00, '1X': 1.14, '2X': 2.05, 'GG': 2.05, 'NG': 1.70},
         ],
+        'BL1': [
+            {'home': 'Dortmund', 'away': 'Gladbach', '1': 1.47, 'X': 4.60, '2': 5.75, '1X': 1.11, '2X': 2.55, 'GG': 1.60, 'NG': 2.20},
+            {'home': 'Augsburg', 'away': 'Werder Bremen', '1': 2.25, 'X': 3.45, '2': 3.00, '1X': 1.35, '2X': 1.60, 'GG': 1.57, 'NG': 2.25},
+            {'home': 'Wolfsburg', 'away': 'Freiburg', '1': 2.40, 'X': 3.45, '2': 2.75, '1X': 1.40, '2X': 1.50, 'GG': 1.60, 'NG': 2.20},
+            {'home': 'Hamburger SV', 'away': 'Frankfurt', '1': 2.60, 'X': 3.50, '2': 2.50, '1X': 1.50, '2X': 1.45, 'GG': 1.50, 'NG': 2.40},
+            {'home': 'Stuttgart', 'away': 'Hoffenheim', '1': 1.95, 'X': 3.85, '2': 3.35, '1X': 1.30, '2X': 1.77, 'GG': 1.40, 'NG': 2.65},
+            {'home': 'Koln', 'away': 'Union Berlin', '1': 2.35, 'X': 3.25, '2': 3.00, '1X': 1.35, '2X': 1.55, 'GG': 1.70, 'NG': 2.05},
+            {'home': 'Leipzig', 'away': 'Leverkusen', '1': 2.05, 'X': 3.75, '2': 3.20, '1X': 1.30, '2X': 1.70, 'GG': 1.45, 'NG': 2.60},
+            {'home': 'Mainz', 'away': 'St. Pauli', '1': 1.90, 'X': 3.35, '2': 4.00, '1X': 1.21, '2X': 1.82, 'GG': 1.88, 'NG': 1.83},
+            {'home': 'Heidenheim', 'away': 'Bayern', '1': 14.00, 'X': 8.75, '2': 1.13, '1X': 5.25, '2X': 1.04, 'GG': 1.85, 'NG': 1.87},
+        ],
+        'FL1': [
+            {'home': 'Toulouse', 'away': 'Lens', '1': 2.75, 'X': 3.30, '2': 2.40, '1X': 1.50, '2X': 1.40, 'GG': 1.63, 'NG': 2.10},
+            {'home': 'Monaco', 'away': 'Lyon', '1': 1.90, 'X': 3.70, '2': 3.45, '1X': 1.27, '2X': 1.77, 'GG': 1.53, 'NG': 2.35},
+            {'home': 'Nice', 'away': 'Strasbourg', '1': 2.70, 'X': 3.40, '2': 2.40, '1X': 1.50, '2X': 1.40, 'GG': 1.55, 'NG': 2.30},
+            {'home': 'Lille', 'away': 'Rennes', '1': 1.83, 'X': 3.55, '2': 4.00, '1X': 1.20, '2X': 1.87, 'GG': 1.55, 'NG': 2.30},
+            {'home': 'Marseille', 'away': 'Nantes', '1': 1.22, 'X': 6.25, '2': 10.00, '1X': 1.02, '2X': 3.75, 'GG': 1.95, 'NG': 1.75},
+            {'home': 'Le Havre', 'away': 'Angers', '1': 2.05, 'X': 3.15, '2': 3.65, '1X': 1.23, '2X': 1.67, 'GG': 1.95, 'NG': 1.75},
+            {'home': 'Brest', 'away': 'Auxerre', '1': 1.85, 'X': 3.30, '2': 4.25, '1X': 1.18, '2X': 1.85, 'GG': 1.75, 'NG': 1.95},
+            {'home': 'Lorient', 'away': 'Metz', '1': 1.70, 'X': 3.70, '2': 4.40, '1X': 1.17, '2X': 2.00, 'GG': 1.70, 'NG': 2.00},
+            {'home': 'PSG', 'away': 'Paris FC', '1': 1.21, 'X': 6.50, '2': 10.00, '1X': 1.02, '2X': 3.85, 'GG': 1.87, 'NG': 1.80},
+        ]
     }
-
 # =======================
 # LOGGING SYSTEM
 # =======================
@@ -92,8 +131,6 @@ def get_next_sunday_log_filename():
 LOG_FILE = get_next_sunday_log_filename()
 
 def log_msg(msg, level="INFO"):
-    # timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    # log_entry = f"[{timestamp}] [{level}] {msg}"
     log_entry = f"{msg}"
     print(log_entry, flush=True)
     try:
@@ -117,19 +154,22 @@ SEED = 42
 np.random.seed(SEED)
 BUDGET_TOTALE = 100.0
 
-DEBUG_MODE = True
-DEBUG_MATCHDAYS = {'SA': 14, 'PL': 15, 'PD': 15}
-
 LEAGUES_CONFIG = [
     {'code': 'SA', 'id': 2019, 'name': 'Serie A'},
     {'code': 'PL', 'id': 2021, 'name': 'Premier League'},
-    {'code': 'PD', 'id': 2014, 'name': 'La Liga'}
+    {'code': 'PD', 'id': 2014, 'name': 'La Liga'},
+    {'code': 'BL1', 'id': 2002, 'name': 'Bundesliga'},
+    {'code': 'FL1', 'id': 2015, 'name': 'Ligue 1'}      
 ]
 
 # =======================
 # TEAM NAME NORMALIZATION
 # =======================
+# =======================
+# TEAM NAME NORMALIZATION (AGGIORNATO)
+# =======================
 TEAM_ALIASES = {
+    # SERIE A
     'FC Internazionale Milano': 'Inter', 'Internazionale': 'Inter', 'Inter Milan': 'Inter',
     'AC Milan': 'Milan', 'Milan': 'Milan', 'Associazione Calcio Milan': 'Milan',
     'SSC Napoli': 'Napoli', 'Napoli': 'Napoli', 'Juventus FC': 'Juventus', 'Juventus': 'Juventus',
@@ -144,6 +184,8 @@ TEAM_ALIASES = {
     'Fiorentina': 'Fiorentina', 'Bologna FC 1909': 'Bologna', 'Bologna': 'Bologna',
     'Empoli FC': 'Empoli', 'Empoli': 'Empoli', 'Monza': 'Monza', 'AC Monza': 'Monza',
     'Venezia FC': 'Venezia', 'Venezia': 'Venezia',
+    
+    # PREMIER LEAGUE
     'Manchester City FC': 'Man City', 'Man City': 'Man City', 'Manchester United FC': 'Man United',
     'Man United': 'Man United', 'Arsenal FC': 'Arsenal', 'Arsenal': 'Arsenal',
     'Liverpool FC': 'Liverpool', 'Liverpool': 'Liverpool', 'Chelsea FC': 'Chelsea', 'Chelsea': 'Chelsea',
@@ -158,6 +200,8 @@ TEAM_ALIASES = {
     'Leicester': 'Leicester', 'Southampton FC': 'Southampton', 'Southampton': 'Southampton',
     'Ipswich Town': 'Ipswich', 'Ipswich': 'Ipswich', 'Leeds United': 'Leeds', 'Leeds': 'Leeds',
     'Sunderland AFC': 'Sunderland', 'Sunderland': 'Sunderland', 'Burnley FC': 'Burnley', 'Burnley': 'Burnley',
+    
+    # LA LIGA (CORREZIONI CRITICHE QUI)
     'Real Madrid CF': 'Real Madrid', 'Real Madrid': 'Real Madrid', 'FC Barcelona': 'Barcelona',
     'Barcelona': 'Barcelona', 'Atlético Madrid': 'Atletico', 'Atletico Madrid': 'Atletico',
     'Atleti': 'Atletico', 'Real Betis Balompié': 'Real Betis', 'Real Betis': 'Real Betis',
@@ -166,14 +210,56 @@ TEAM_ALIASES = {
     'Real Sociedad': 'Real Sociedad', 'Real Sociedad de Fútbol': 'Real Sociedad',
     'Girona FC': 'Girona', 'Girona': 'Girona', 'Getafe CF': 'Getafe', 'Getafe': 'Getafe',
     'Sevilla FC': 'Sevilla', 'Sevilla': 'Sevilla', 'Valencia CF': 'Valencia', 'Valencia': 'Valencia',
-    'Rayo Vallecano': 'Rayo', 'Vallecano': 'Rayo', 'RCD Espanyol': 'Espanyol', 'Espanyol': 'Espanyol',
+    'Rayo Vallecano': 'Rayo', 'Vallecano': 'Rayo', 
+    'RCD Espanyol de Barcelona': 'Espanyol', 'RCD Espanyol': 'Espanyol', 'Espanyol': 'Espanyol', # FIX
     'Real Oviedo': 'Oviedo', 'Oviedo': 'Oviedo', 'RCD Mallorca': 'Mallorca', 'Mallorca': 'Mallorca',
     'Elche CF': 'Elche', 'Elche': 'Elche', 'Celta Vigo': 'Celta', 'Celta de Vigo': 'Celta',
     'Celta': 'Celta', 'Levante UD': 'Levante', 'Levante': 'Levante', 'CA Osasuna': 'Osasuna',
     'Osasuna': 'Osasuna', 'Las Palmas': 'Las Palmas', 'CD Leganés': 'Leganes',
+    'Deportivo Alavés': 'Alaves', 'Alavés': 'Alaves', 'Alaves': 'Alaves', # FIX
     'Leganes': 'Leganes', 'Real Valladolid': 'Valladolid', 'Valladolid': 'Valladolid',
+    
+    # BUNDESLIGA (CORREZIONI CRITICHE QUI)
+    'FC Bayern München': 'Bayern', 'Bayern Munich': 'Bayern', 'Bayern': 'Bayern',
+    'Borussia Dortmund': 'Dortmund', 'BVB': 'Dortmund',
+    'Bayer 04 Leverkusen': 'Leverkusen', 'Bayer Leverkusen': 'Leverkusen',
+    'RB Leipzig': 'Leipzig', 'RasenBallsport Leipzig': 'Leipzig',
+    'VfB Stuttgart': 'Stuttgart', 'Stuttgart': 'Stuttgart',
+    'Eintracht Frankfurt': 'Frankfurt', 'Eintracht': 'Frankfurt',
+    'VfL Wolfsburg': 'Wolfsburg', 'Borussia Mönchengladbach': 'Gladbach', 'Mönchengladbach': 'Gladbach',
+    'SC Freiburg': 'Freiburg', 'TSG 1899 Hoffenheim': 'Hoffenheim',
+    '1. FC Union Berlin': 'Union Berlin', 'Union Berlin': 'Union Berlin',
+    '1. FSV Mainz 05': 'Mainz', 'Mainz 05': 'Mainz', 'Mainz': 'Mainz',
+    'FC Augsburg': 'Augsburg', 'SV Werder Bremen': 'Werder Bremen', 'Werder Bremen': 'Werder Bremen',
+    '1. FC Heidenheim 1846': 'Heidenheim', 'Heidenheim': 'Heidenheim',
+    'VfL Bochum 1848': 'Bochum', 'Bochum': 'Bochum',
+    'FC St. Pauli': 'St. Pauli', 'St. Pauli': 'St. Pauli',
+    '1. FC Köln': 'Koln', '1. FC Koeln': 'Koln', 'Köln': 'Koln', # FIX
+    'Hamburger SV': 'Hamburger SV',
+    'Holstein Kiel': 'Holstein Kiel', 'Kiel': 'Holstein Kiel',
+    
+    # LIGUE 1 (CORREZIONI CRITICHE QUI)
+    # LIGUE 1 (AGGIORNATO CON PARIS FC)
+    'Paris Saint-Germain FC': 'PSG', 'Paris Saint-Germain': 'PSG', 'Paris SG': 'PSG',
+    'Paris FC': 'Paris FC', 'PFC': 'Paris FC', # <--- QUESTA RIGA È FONDAMENTALE
+    'Olympique de Marseille': 'Marseille', 'Marseille': 'Marseille',
+    'AS Monaco FC': 'Monaco', 'AS Monaco': 'Monaco', 'Monaco': 'Monaco',
+    'Olympique Lyonnais': 'Lyon', 'Lyon': 'Lyon',
+    'LOSC Lille': 'Lille', 'Lille': 'Lille',
+    'RC Lens': 'Lens', 'Racing Club de Lens': 'Lens',
+    'Stade Rennais FC': 'Rennes', 'Rennes': 'Rennes',
+    'OGC Nice': 'Nice', 'Nice': 'Nice',
+    'Stade de Reims': 'Reims', 'Reims': 'Reims',
+    'Stade Brestois 29': 'Brest', 'Brest': 'Brest',
+    'Montpellier HSC': 'Montpellier', 'Montpellier': 'Montpellier',
+    'RC Strasbourg Alsace': 'Strasbourg', 'Strasbourg': 'Strasbourg',
+    'FC Nantes': 'Nantes', 'Toulouse FC': 'Toulouse', 'Toulouse': 'Toulouse',
+    'Le Havre AC': 'Le Havre', 'Le Havre': 'Le Havre',
+    'AJ Auxerre': 'Auxerre', 'Angers SCO': 'Angers', 'Angers': 'Angers',
+    'AS Saint-Étienne': 'Saint-Etienne', 'Saint-Etienne': 'Saint-Etienne',
+    'FC Lorient': 'Lorient', 'Lorient': 'Lorient',
+    'FC Metz': 'Metz', 'Metz': 'Metz'
 }
-
 def normalize_team_name(name):
     if name in TEAM_ALIASES:
         return TEAM_ALIASES[name]
@@ -191,13 +277,17 @@ def normalize_team_name(name):
 TOP_TEAMS = [
     'Inter', 'Juventus', 'Milan', 'Napoli', 'Atalanta', 'Roma', 'Lazio',
     'Man City', 'Arsenal', 'Liverpool', 'Chelsea', 'Tottenham', 'Man United', 'Newcastle',
-    'Real Madrid', 'Barcelona', 'Atletico', 'Girona', 'Athletic Club'
+    'Real Madrid', 'Barcelona', 'Atletico', 'Girona', 'Athletic Club',
+    'Bayern', 'Leverkusen', 'Dortmund', 'Leipzig', 
+    'PSG', 'Monaco', 'Marseille', 'Lille'
 ]
 
 WEAK_ATTACKS = [
     'Lecce', 'Cagliari', 'Empoli', 'Monza', 'Venezia', 'Genoa', 'Verona', 'Udinese', 'Como',
     'Southampton', 'Ipswich', 'Leicester', 'Everton', 'Wolves', 'Crystal Palace',
-    'Leganes', 'Valladolid', 'Espanyol', 'Getafe', 'Las Palmas', 'Valencia'
+    'Leganes', 'Valladolid', 'Espanyol', 'Getafe', 'Las Palmas', 'Valencia',
+    'Bochum', 'Holstein Kiel', 'St. Pauli', 'Union Berlin',
+    'Angers', 'Le Havre', 'Saint-Etienne', 'Montpellier', 'Auxerre'
 ]
 
 
@@ -241,23 +331,62 @@ def fetch_matches(comp_id, season, league_name):
         return []
 
 def fetch_odds_global(df_matches):
-    log_msg("[QUOTE] Assegnazione quote ai match (SNAI REALE)...")
+    log_msg("[QUOTE] Assegnazione quote ai match (MATCHING INTELLIGENTE V2)...")
     odds_list = []
     odds_mapping = get_odds_mapping()
+    
+    # Quote di default (neutre)
+    default_odds = {'1': 1.01, 'X': 1.01, '2': 1.01, '1X': 1.01, '2X': 1.01, 'GG': 1.01, 'NG': 1.01}
+
     try:
+        matches_matched = 0
         for idx, row in df_matches.iterrows():
             league = row['league']
-            league_odds = odds_mapping.get(league, [])
-            if not league_odds:
-                log_msg(f"[WARN] Nessuna quota per lega {league}, usando default", level="WARNING")
-                odds_list.append({'1': 1.5, 'X': 3.0, '2': 3.0, '1X': 1.05, '2X': 1.50, 'GG': 1.70, 'NG': 2.00})
+            home_api = row['home_team']
+            away_api = row['away_team']
+            
+            league_odds_data = odds_mapping.get(league, [])
+            
+            found_odds = None
+            
+            # Normalizzazione stringhe per il confronto (rimuove FC, 1., spazi)
+            h_api_clean = home_api.lower().replace("fc", "").replace("1.", "").strip()
+            a_api_clean = away_api.lower().replace("fc", "").replace("1.", "").strip()
+
+            for stored_match in league_odds_data:
+                if 'home' not in stored_match or 'away' not in stored_match:
+                    continue
+                
+                h_store = stored_match['home'].lower().replace("fc", "").strip()
+                a_store = stored_match['away'].lower().replace("fc", "").strip()
+                
+                # Check 1: Similarità (Fuzzy)
+                h_ratio = SequenceMatcher(None, h_api_clean, h_store).ratio()
+                a_ratio = SequenceMatcher(None, a_api_clean, a_store).ratio()
+                
+                # Check 2: Contenimento (es. "Lens" in "Racing Club de Lens")
+                h_sub = h_store in h_api_clean or h_api_clean in h_store
+                a_sub = a_store in a_api_clean or a_api_clean in a_store
+
+                # Logica rilassata: Se uno dei due metodi funziona per entrambe le squadre
+                if (h_ratio > 0.7 or h_sub) and (a_ratio > 0.7 or a_sub):
+                    found_odds = stored_match
+                    break 
+            
+            if found_odds:
+                odds_list.append(found_odds)
+                matches_matched += 1
             else:
-                idx_league = idx % len(league_odds)
-                odds_list.append(league_odds[idx_league])
-        log_msg(f"[OK] Quote assegnate: {len(odds_list)} match")
+                log_msg(f"[WARN] Quote NON trovate per: {home_api} - {away_api} ({league}). Uso default.", level="WARNING")
+                odds_list.append(default_odds)
+
+        log_msg(f"[OK] Quote assegnate correttamente a {matches_matched}/{len(df_matches)} match.")
         return odds_list
+
     except Exception as e:
         log_msg(f"[ERROR] Errore assegnazione quote: {e}", level="ERROR")
+        import traceback
+        traceback.print_exc()
         return []
 
 def parse_match(m, s, league_code):
@@ -277,42 +406,6 @@ def parse_match(m, s, league_code):
     except Exception as e:
         log_msg(f"[ERROR] Errore parsing match: {e}", level="ERROR")
         return None
-
-# def build_global_dataset(leagues, seasons_train, seasons_curr, debug_mds):
-#     log_msg("\n[1] COSTRUZIONE DATASET GLOBALE (IT/EN/ES)...")
-#     log_msg("-" * 80)
-#     all_rows = []
-#     try:
-#         for league in leagues:
-#             l_code = league['code']
-#             l_id = league['id']
-#             current_md = debug_mds.get(l_code, 10)
-#             for s in seasons_train:
-#                 matches = fetch_matches(l_id, s, league['name'])
-#                 for m in matches:
-#                     if m["status"] in ["FINISHED", "LIVE"]:
-#                         parsed = parse_match(m, s, l_code)
-#                         if parsed:
-#                             all_rows.append(parsed)
-#             for s in seasons_curr:
-#                 matches = fetch_matches(l_id, s, league['name'])
-#                 count_curr = 0
-#                 for m in matches:
-#                     if m["status"] in ["FINISHED", "LIVE"]:
-#                         if m.get("matchday", 0) <= current_md:
-#                             parsed = parse_match(m, s, l_code)
-#                             if parsed:
-#                                 all_rows.append(parsed)
-#                                 count_curr += 1
-#                 log_msg(f" -> {league['name']}: {count_curr} partite correnti caricate.")
-#         df = pd.DataFrame(all_rows)
-#         if not df.empty:
-#             df["date"] = pd.to_datetime(df["date"])
-#         log_msg(f"[OK] TOTALE GLOBALE: {len(df)} partite pronte per l'analisi.\n")
-#         return df
-#     except Exception as e:
-#         log_msg(f"[ERROR] Errore costruzione dataset: {e}", level="ERROR")
-#         return pd.DataFrame()
 
 def build_global_dataset(leagues, seasons_train, seasons_curr, debug_mds):
     log_msg("\n[1] COSTRUZIONE DATASET GLOBALE (CACHE SYSTEM)...")
@@ -398,7 +491,6 @@ def build_global_dataset(leagues, seasons_train, seasons_curr, debug_mds):
 
     log_msg(f"[OK] TOTALE GLOBALE: {len(df_final)} partite pronte (Storico + Corrente).\n")
     return df_final
-
 
 def compute_elo(df, k=20):
     try:
@@ -530,36 +622,120 @@ def build_features_v23_mega(df):
         return np.array([]), np.array([]), df
 
 def train_model(X, y):
-    log_msg("\n[3] TRAINING INTELLIGENZA ARTIFICIALE (V23 TUNED)...")
+    log_msg("\n[3] AI TRAINING (V27 STACKING: AUTO-WEIGHTING)...")
     try:
         if len(X) == 0 or len(y) == 0:
-            log_msg("[ERROR] Training set vuoto!", level="ERROR")
+            log_msg("[ERROR] Training set is empty!", level="ERROR")
             return None, None
+
+        # 1. Data Scaling
+        log_msg("[INFO] Scaling features...", level="INFO")
         scaler = StandardScaler()
         X_scaled = scaler.fit_transform(X)
+
+        # 2. Split Training/Test (85% - 15%)
+        # Using chronological split to respect time order
         split = int(len(X) * 0.85)
         X_train, X_test = X_scaled[:split], X_scaled[split:]
         y_train, y_test = y[:split], y[split:]
-        model = RandomForestClassifier(
-            n_estimators=450,
+        
+        log_msg(f"[INFO] Dataset split: {len(X_train)} training samples, {len(X_test)} test samples.")
+
+        # --- DEFINING BASE LEARNERS (The Experts) ---
+        
+        # Expert 1: Random Forest (General Overview)
+        rf = RandomForestClassifier(
+            n_estimators=400,
             max_depth=10,
-            min_samples_split=10,
-            min_samples_leaf=5,
+            min_samples_leaf=3,
             max_features='sqrt',
             random_state=SEED,
-            n_jobs=-1,
-            class_weight='balanced'
+            class_weight='balanced',
+            n_jobs=-1
         )
-        model.fit(X_train, y_train)
-        acc = accuracy_score(y_test, model.predict(X_test))
-        log_msg(f"[STATS] Precisione Modello (Test Set): {acc:.3f}", level="INFO")
-        if acc < 0.45:
-            log_msg("[WARN] Accuracy molto bassa, il modello potrebbe non essere affidabile", level="WARNING")
-        return model, scaler
-    except Exception as e:
-        log_msg(f"[ERROR] Errore training: {e}", level="ERROR")
-        return None, None
 
+        # Expert 2: AdaBoost (Error Correction)
+        ada = AdaBoostClassifier(
+            n_estimators=80,
+            learning_rate=0.05,
+            random_state=SEED
+        )
+
+        # Expert 3: Gradient Boosting (Pure Precision)
+        gb = GradientBoostingClassifier(
+            n_estimators=150,
+            learning_rate=0.05,
+            max_depth=4,
+            subsample=0.8,
+            random_state=SEED
+        )
+
+        # List of estimators
+        estimators = [
+            ('Random Forest', rf),
+            ('AdaBoost', ada),
+            ('Grad. Boosting', gb)
+        ]
+
+        # --- THE META-MODEL (The Boss) ---
+        # Logistic Regression learns the best weights for the experts
+        final_layer = LogisticRegression(
+            multi_class='multinomial',
+            solver='lbfgs',
+            max_iter=2000,
+            C=1.0
+        )
+
+        # --- STACKING CLASSIFIER ---
+        # cv=5 ensures the meta-model learns from out-of-sample predictions
+        clf = StackingClassifier(
+            estimators=estimators,
+            final_estimator=final_layer,
+            cv=5, 
+            passthrough=False, 
+            n_jobs=-1
+        )
+
+        # Training
+        log_msg(f"[TRAIN] Training Stacking Ensemble (this may take a while)...")
+        clf.fit(X_train, y_train)
+
+        # --- EVALUATION ---
+        log_msg("-" * 60)
+        log_msg(f"{'MODEL':<20} | {'ACCURACY':<10} | {'STATUS'}")
+        log_msg("-" * 60)
+
+        # 1. Evaluate Individual Models (The Base Learners)
+        # We access the fitted sub-models to see how they perform individually on the test set
+        for name, model in zip(['Random Forest', 'AdaBoost', 'Grad. Boosting'], clf.estimators_):
+            try:
+                pred_single = model.predict(X_test)
+                acc_single = accuracy_score(y_test, pred_single)
+                log_msg(f"{name:<20} | {acc_single:.3f}      | [OK]")
+            except Exception as e:
+                log_msg(f"{name:<20} | N/A        | [ERROR]")
+
+        # 2. Evaluate The Stacking System (The Combined Result)
+        preds = clf.predict(X_test)
+        acc = accuracy_score(y_test, preds)
+        
+        log_msg("-" * 60)
+        log_msg(f"{'STACKING SYSTEM':<20} | {acc:.3f}      | [FINAL]")
+        log_msg("-" * 60)
+
+        if acc < 0.45:
+             log_msg("[WARN] Accuracy is low. Markets might be volatile or data insufficient.", level="WARNING")
+        else:
+             log_msg("[INFO] Model trained successfully with good stability.")
+
+        return clf, scaler
+
+    except Exception as e:
+        log_msg(f"[ERROR] Training failed: {e}", level="ERROR")
+        import traceback
+        traceback.print_exc()
+        return None, None
+    
 def is_top(t):
     return t in TOP_TEAMS
 
@@ -674,24 +850,6 @@ def predict_next_games(leagues, df_hist, model, scaler):
         log_msg(f"[ERROR] Errore predict_next_games: {e}", level="ERROR")
         return pd.DataFrame()
 
-# ==============================================================================
-#  V25: ADVANCED PORTFOLIO GENERATION (TIER-BASED)
-# ==============================================================================
-
-# def check_correlation_conflict(matches_in_slip):
-#     teams_seen = set()
-#     for m in matches_in_slip:
-#         try:
-#             parts = m.split('] ')[1].split(' vs ')
-#             h, a = parts[0], parts[1]
-#             if h in teams_seen or a in teams_seen:
-#                 return True
-#             teams_seen.add(h)
-#             teams_seen.add(a)
-#         except:
-#             continue
-#     return False
-
 def calculate_kelly_stake_advanced(prob, quota, bankroll, tier='SAFE'):
     if quota <= 1.0: 
         return 0.0
@@ -720,8 +878,6 @@ def score_slip_quality(slip, accuracy=0.495):
     legs_score = (5 - n_legs) * 10 if n_legs <= 5 else 0
     prob_score = min(slip['prob'] * 100, 100) / 100 * 20
     return ev_score + legs_score + prob_score
-
-import random # Assicurati che questo import sia presente a inizio file, o qui dentro
 
 def generate_tiered_portfolio(options, model_accuracy, budget):
     if not options:
