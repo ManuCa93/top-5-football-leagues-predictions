@@ -1,27 +1,3 @@
-"""
-EUROPEAN PREDICTOR 2025-26 - VERSIONE V26+ (ENHANCED ML)
-Advanced AI-Powered Sports Betting Portfolio Generator with Improved Predictions
-
-FEATURES V26:
-✅ Expected Goals (xG) - Valutazione qualità dei tiri (+2-3%)
-✅ Rest Days - Gestione stanchezza squadra (+1-2%)
-✅ H2H Performance - Scontri diretti storici (+1-2%)
-✅ Momentum Decay - Recent form con exponential decay (+1%)
-✅ RobustScaler - Resistenza agli outlier (+1%)
-✅ SelectKBest - Feature selection (+0.5%)
-✅ CalibratedClassifierCV - Probabilità affidabili (+0.5%)
-✅ 5-Tier Portfolio System (Bunker → Cacciatore → Pirata)
-✅ Dynamic Budget Allocation (accuracy-adaptive)
-✅ Quality Scoring System (100-point scale)
-✅ Kelly Criterion Optimized Stake Sizing
-✅ Correlation Conflict Detection
-✅ Real-time Poisson GG/NG Calculations
-✅ EV-based Bet Filtering
-✅ Intelligent Portfolio Diversification
-
-EXPECTED IMPROVEMENT: +5-7% accuracy (50% → 57-60%)
-"""
-
 import sys
 import io
 import os
@@ -62,68 +38,164 @@ except:
 DEBUG_MODE = True
 
 # Last matchday played
-DEBUG_MATCHDAYS = {'SA': 22, 'PL': 23, 'PD': 21, 'BL1': 19, 'FL1': 19}
+DEBUG_MATCHDAYS = {'SA': 23, 'PL': 24, 'PD': 22, 'BL1': 20, 'FL1': 20}
 
 def get_odds_mapping():
     return {
         'SA': [
-            {'home': 'Lazio', 'away': 'Genoa', '1': 2.15, 'X': 2.90, '2': 4.00, '1X': 1.23, '2X': 1.67, 'GG': 2.20, 'NG': 1.60},
-            {'home': 'Pisa', 'away': 'Sassuolo', '1': 2.90, 'X': 3.05, '2': 2.55, '1X': 1.50, '2X': 1.40, 'GG': 1.82, 'NG': 1.90},
-            {'home': 'Napoli', 'away': 'Fiorentina', '1': 1.80, 'X': 3.40, '2': 4.75, '1X': 1.17, '2X': 1.97, 'GG': 1.80, 'NG': 1.90},
-            {'home': 'Cagliari', 'away': 'Verona', '1': 2.10, 'X': 3.00, '2': 3.90, '1X': 1.24, '2X': 1.70, 'GG': 2.00, 'NG': 1.70},
-            {'home': 'Torino', 'away': 'Lecce', '1': 1.95, 'X': 3.00, '2': 4.50, '1X': 1.19, '2X': 1.80, 'GG': 2.10, 'NG': 1.67},
-            {'home': 'Como', 'away': 'Atalanta', '1': 2.40, 'X': 3.20, '2': 3.05, '1X': 1.35, '2X': 1.55, 'GG': 1.65, 'NG': 2.10},
-            {'home': 'Cremonese', 'away': 'Inter', '1': 9.75, 'X': 5.75, '2': 1.28, '1X': 3.50, '2X': 1.04, 'GG': 2.05, 'NG': 1.67},
-            {'home': 'Parma', 'away': 'Juventus', '1': 7.00, 'X': 4.40, '2': 1.45, '1X': 2.65, '2X': 1.08, 'GG': 2.05, 'NG': 1.70},
-            {'home': 'Udinese', 'away': 'Roma', '1': 4.25, 'X': 3.35, '2': 1.90, '1X': 1.87, '2X': 1.21, 'GG': 1.90, 'NG': 1.80},
-            {'home': 'Bologna', 'away': 'Milan', '1': 3.45, 'X': 3.35, '2': 2.10, '1X': 1.67, '2X': 1.27, 'GG': 1.70, 'NG': 2.00},
+            {'home': 'Verona', 'away': 'Pisa',
+             '1': 2.40, 'X': 3.00, '2': 3.25,
+             '1X': 1.33, '2X': 1.55, 'GG': 1.90, 'NG': 1.80},
+            {'home': 'Genoa', 'away': 'Napoli',
+             '1': 4.40, 'X': 3.15, '2': 1.95,
+             '1X': 1.80, '2X': 1.19, 'GG': 2.10, 'NG': 1.65},
+            {'home': 'Fiorentina', 'away': 'Torino',
+             '1': 1.70, 'X': 3.70, '2': 4.90,
+             '1X': 1.16, '2X': 2.10, 'GG': 1.77, 'NG': 1.95},
+            {'home': 'Bologna', 'away': 'Parma',
+             '1': 1.60, 'X': 4.00, '2': 5.50,
+             '1X': 1.13, '2X': 2.25, 'GG': 1.90, 'NG': 1.80},
+            {'home': 'Lecce', 'away': 'Udinese',
+             '1': 3.00, 'X': 2.85, '2': 2.70,
+             '1X': 1.45, '2X': 1.35, 'GG': 2.15, 'NG': 1.63},
+            {'home': 'Sassuolo', 'away': 'Inter',
+             '1': 6.50, 'X': 4.60, '2': 1.45,
+             '1X': 2.65, '2X': 1.10, 'GG': 1.90, 'NG': 1.80},
+            {'home': 'Juventus', 'away': 'Lazio',
+             '1': 1.45, 'X': 4.25, '2': 7.25,
+             '1X': 1.08, '2X': 2.65, 'GG': 2.25, 'NG': 1.57},
+            {'home': 'Atalanta', 'away': 'Cremonese',
+             '1': 1.35, 'X': 4.90, '2': 8.00,
+             '1X': 1.06, '2X': 3.05, 'GG': 1.95, 'NG': 1.77},
+            {'home': 'Roma', 'away': 'Cagliari',
+             '1': 1.45, 'X': 4.25, '2': 7.25,
+             '1X': 1.08, '2X': 2.65, 'GG': 2.15, 'NG': 1.60},
+            # 10ª Serie A (manca su SNAI → la metti a mano qui se serve)
         ],
         'PL': [
-            {'home': 'Wolves', 'away': 'Bournemouth', '1': 2.95, 'X': 3.45, '2': 2.25, '1X': 1.60, '2X': 1.35, 'GG': 1.57, 'NG': 2.25},
-            {'home': 'Leeds', 'away': 'Arsenal', '1': 5.75, 'X': 4.10, '2': 1.53, '1X': 2.35, '2X': 1.11, 'GG': 1.90, 'NG': 1.80},
-            {'home': 'Brighton', 'away': 'Everton', '1': 1.85, 'X': 3.55, '2': 4.00, '1X': 1.21, '2X': 1.87, 'GG': 1.67, 'NG': 2.05},
-            {'home': 'Chelsea', 'away': 'West Ham', '1': 1.47, 'X': 4.50, '2': 6.00, '1X': 1.10, '2X': 2.55, 'GG': 1.60, 'NG': 2.20},
-            {'home': 'Liverpool', 'away': 'Newcastle', '1': 1.80, 'X': 3.90, '2': 3.90, '1X': 1.22, '2X': 1.93, 'GG': 1.50, 'NG': 2.40},
-            {'home': 'Aston Villa', 'away': 'Brentford', '1': 2.05, 'X': 3.40, '2': 3.50, '1X': 1.27, '2X': 1.70, 'GG': 1.60, 'NG': 2.20},
-            {'home': 'Man United', 'away': 'Fulham', '1': 1.55, 'X': 4.40, '2': 5.00, '1X': 1.14, '2X': 2.35, 'GG': 1.67, 'NG': 2.10},
-            {'home': 'Nottingham', 'away': 'Crystal Palace', '1': 1.95, 'X': 3.45, '2': 3.80, '1X': 1.23, '2X': 1.77, 'GG': 1.77, 'NG': 1.95},
-            {'home': 'Tottenham', 'away': 'Man City', '1': 4.40, 'X': 4.00, '2': 1.70, '1X': 2.05, '2X': 1.18, 'GG': 1.57, 'NG': 2.25},
-            {'home': 'Sunderland', 'away': 'Burnley', '1': 1.80, 'X': 3.40, '2': 4.60, '1X': 1.17, '2X': 1.93, 'GG': 1.97, 'NG': 1.75},
-        ],
-        'PD': [
-            {'home': 'Espanyol', 'away': 'Alaves', '1': 1.92, 'X': 3.10, '2': 4.60, '1X': 1.18, '2X': 1.85, 'GG': 2.15, 'NG': 1.63},
-            {'home': 'Oviedo', 'away': 'Girona', '1': 2.75, 'X': 3.00, '2': 2.70, '1X': 1.40, '2X': 1.40, 'GG': 1.83, 'NG': 1.88},
-            {'home': 'Osasuna', 'away': 'Villarreal', '1': 2.75, 'X': 3.25, '2': 2.50, '1X': 1.50, '2X': 1.40, 'GG': 1.65, 'NG': 2.15},
-            {'home': 'Levante', 'away': 'Atletico', '1': 5.00, 'X': 4.00, '2': 1.60, '1X': 2.20, '2X': 1.14, 'GG': 1.70, 'NG': 2.05},
-            {'home': 'Elche', 'away': 'Barcelona', '1': 6.75, 'X': 5.75, '2': 1.33, '1X': 3.10, '2X': 1.08, 'GG': 1.53, 'NG': 2.35},
-            {'home': 'Real Madrid', 'away': 'Rayo', '1': 1.24, 'X': 6.00, '2': 10.0, '1X': 1.03, '2X': 3.70, 'GG': 1.90, 'NG': 1.80},
-            {'home': 'Real Betis', 'away': 'Valencia', '1': 1.85, 'X': 3.40, '2': 4.25, '1X': 1.19, '2X': 1.90, 'GG': 1.67, 'NG': 2.10},
-            {'home': 'Getafe', 'away': 'Celta', '1': 2.80, 'X': 2.85, '2': 2.75, '1X': 1.40, '2X': 1.40, 'GG': 2.15, 'NG': 1.60},
-            {'home': 'Athletic Club', 'away': 'Real Sociedad', '1': 2.30, 'X': 3.05, '2': 3.30, '1X': 1.30, '2X': 1.57, 'GG': 1.80, 'NG': 1.90},
-            {'home': 'Mallorca', 'away': 'Sevilla', '1': 2.40, 'X': 3.10, '2': 3.05, '1X': 1.35, '2X': 1.50, 'GG': 1.85, 'NG': 1.85},
+            {'home': 'Leeds', 'away': 'Nottingham Forest',
+             '1': 2.15, 'X': 3.25, '2': 3.40,
+             '1X': 1.30, '2X': 1.67, 'GG': 1.77, 'NG': 1.93},
+            {'home': 'Man United', 'away': 'Tottenham',
+             '1': 1.55, 'X': 4.50, '2': 4.75,
+             '1X': 1.16, '2X': 2.35, 'GG': 1.50, 'NG': 2.40},
+            {'home': 'Fulham', 'away': 'Everton',
+             '1': 2.05, 'X': 3.20, '2': 3.65,
+             '1X': 1.25, '2X': 1.70, 'GG': 1.87, 'NG': 1.85},
+            {'home': 'Burnley', 'away': 'West Ham',
+             '1': 3.25, 'X': 3.45, '2': 2.10,
+             '1X': 1.67, '2X': 1.30, 'GG': 1.67, 'NG': 2.10},
+            {'home': 'Wolves', 'away': 'Chelsea',
+             '1': 4.75, 'X': 4.00, '2': 1.65,
+             '1X': 2.15, '2X': 1.16, 'GG': 1.63, 'NG': 2.15},
+            {'home': 'Bournemouth', 'away': 'Aston Villa',
+             '1': 2.65, 'X': 3.55, '2': 2.40,
+             '1X': 1.50, '2X': 1.43, 'GG': 1.50, 'NG': 2.40},
+            {'home': 'Arsenal', 'away': 'Sunderland',
+             '1': 1.20, 'X': 6.25, '2': 13.0,
+             '1X': 1.09, '2X': 4.10, 'GG': 2.50, 'NG': 1.47},
+            {'home': 'Newcastle', 'away': 'Brentford',
+             '1': 2.00, 'X': 3.45, '2': 3.50,
+             '1X': 1.27, '2X': 1.75, 'GG': 1.53, 'NG': 2.35},
+            {'home': 'Brighton', 'away': 'Crystal Palace',
+             '1': 1.92, 'X': 3.55, '2': 3.70,
+             '1X': 1.24, '2X': 1.80, 'GG': 1.60, 'NG': 2.15},
+            {'home': 'Liverpool', 'away': 'Man City',
+             '1': 2.30, 'X': 3.65, '2': 2.80,
+             '1X': 1.40, '2X': 1.57, 'GG': 1.45, 'NG': 2.55},
         ],
         'BL1': [
-            {'home': 'Koln', 'away': 'Wolfsburg', '1': 1.95, 'X': 3.75, '2': 3.50, '1X': 1.30, '2X': 1.80, 'GG': 1.47, 'NG': 2.50},
-            {'home': 'Werder Bremen', 'away': 'Gladbach', '1': 2.35, 'X': 3.45, '2': 2.80, '1X': 1.40, '2X': 1.55, 'GG': 1.50, 'NG': 2.40},
-            {'home': 'Augsburg', 'away': 'St. Pauli', '1': 1.97, 'X': 3.25, '2': 4.00, '1X': 1.21, '2X': 1.77, 'GG': 1.92, 'NG': 1.77},
-            {'home': 'Hoffenheim', 'away': 'Union Berlin', '1': 1.77, 'X': 3.70, '2': 4.25, '1X': 1.19, '2X': 1.95, 'GG': 1.67, 'NG': 2.10},
-            {'home': 'Leipzig', 'away': 'Mainz', '1': 1.55, 'X': 4.40, '2': 5.25, '1X': 1.13, '2X': 2.35, 'GG': 1.55, 'NG': 2.30},
-            {'home': 'Frankfurt', 'away': 'Leverkusen', '1': 3.05, 'X': 3.70, '2': 2.10, '1X': 1.67, '2X': 1.35, 'GG': 1.45, 'NG': 2.60},
-            {'home': 'Hamburger SV', 'away': 'Bayern', '1': 8.50, 'X': 6.25, '2': 1.27, '1X': 3.55, '2X': 1.04, 'GG': 1.63, 'NG': 2.15},
-            {'home': 'Stuttgart', 'away': 'Freiburg', '1': 1.67, 'X': 4.00, '2': 4.50, '1X': 1.17, '2X': 2.10, 'GG': 1.55, 'NG': 2.30},
-            {'home': 'Dortmund', 'away': 'Heidenheim', '1': 1.23, 'X': 6.25, '2': 10.0, '1X': 1.03, '2X': 3.80, 'GG': 1.87, 'NG': 1.85},
+            {'home': 'Union Berlin', 'away': 'Eintracht Frankfurt',
+             '1': 2.05, 'X': 3.45, '2': 3.55,
+             '1X': 1.28, '2X': 1.73, 'GG': 1.67, 'NG': 2.10},
+            {'home': 'Freiburg', 'away': 'Werder Bremen',
+             '1': 1.80, 'X': 3.70, '2': 4.10,
+             '1X': 1.20, '2X': 1.93, 'GG': 1.63, 'NG': 2.15},
+            {'home': 'Wolfsburg', 'away': 'Dortmund',
+             '1': 4.25, 'X': 4.00, '2': 1.70,
+             '1X': 2.05, '2X': 1.19, 'GG': 1.50, 'NG': 2.40},
+            {'home': 'Heidenheim', 'away': 'Hamburg',
+             '1': 2.85, 'X': 3.40, '2': 2.35,
+             '1X': 1.55, '2X': 1.40, 'GG': 1.60, 'NG': 2.20},
+            {'home': 'Mainz', 'away': 'Augsburg',
+             '1': 2.00, 'X': 3.50, '2': 3.45,
+             '1X': 1.27, '2X': 1.75, 'GG': 1.65, 'NG': 2.15},
+            {'home': 'St. Pauli', 'away': 'Stoccarda',
+             '1': 4.25, 'X': 3.65, '2': 1.77,
+             '1X': 1.95, '2X': 1.19, 'GG': 1.70, 'NG': 2.00},
+            {'home': 'Monchengladbach', 'away': 'Leverkusen',
+             '1': 3.45, 'X': 3.65, '2': 1.95,
+             '1X': 1.77, '2X': 1.27, 'GG': 1.50, 'NG': 2.40},
+            {'home': 'Colonia', 'away': 'Lipsia',
+             '1': 3.20, 'X': 3.75, '2': 2.05,
+             '1X': 1.70, '2X': 1.30, 'GG': 1.40, 'NG': 2.70},
+            {'home': 'Bayern', 'away': 'Hoffenheim',
+             '1': 1.27, 'X': 6.75, '2': 8.00,
+             '1X': 1.05, '2X': 3.55, 'GG': 1.50, 'NG': 2.40},
+            # 10ª BL1 se appare dopo su SNAI
         ],
         'FL1': [
-            {'home': 'Lens', 'away': 'Le Havre', '1': 1.40, 'X': 4.75, '2': 7.50, '1X': 1.07, '2X': 2.85, 'GG': 1.70, 'NG': 2.00},
-            {'home': 'Paris FC', 'away': 'Marseille', '1': 3.70, 'X': 3.70, '2': 1.87, '1X': 1.85, '2X': 1.24, 'GG': 1.60, 'NG': 2.25},
-            {'home': 'Lorient', 'away': 'Nantes', '1': 1.83, 'X': 3.45, '2': 4.25, '1X': 1.19, '2X': 1.90, 'GG': 1.80, 'NG': 1.90},
-            {'home': 'Monaco', 'away': 'Rennes', '1': 2.00, 'X': 3.80, '2': 3.25, '1X': 1.30, '2X': 1.75, 'GG': 1.43, 'NG': 2.60},
-            {'home': 'Lyon', 'away': 'Lille', '1': 1.90, 'X': 3.55, '2': 3.65, '1X': 1.23, '2X': 1.77, 'GG': 1.63, 'NG': 2.15},
-            {'home': 'Toulouse', 'away': 'Auxerre', '1': 1.73, 'X': 3.50, '2': 4.75, '1X': 1.14, '2X': 2.00, 'GG': 1.95, 'NG': 1.75},
-            {'home': 'Angers', 'away': 'Metz', '1': 2.10, 'X': 3.25, '2': 3.45, '1X': 1.27, '2X': 1.65, 'GG': 1.77, 'NG': 1.90},
-            {'home': 'Nice', 'away': 'Brest', '1': 2.10, 'X': 3.20, '2': 3.45, '1X': 1.27, '2X': 1.65, 'GG': 1.57, 'NG': 2.20},
-            {'home': 'Strasbourg', 'away': 'PSG', '1': 4.75, 'X': 4.25, '2': 1.60, '1X': 2.15, '2X': 1.14, 'GG': 1.53, 'NG': 2.30},
-        ]
+            {'home': 'Metz', 'away': 'Lille',
+             '1': 5.50, 'X': 4.25, '2': 1.55,
+             '1X': 2.40, '2X': 1.13, 'GG': 1.77, 'NG': 1.95},
+            {'home': 'Lens', 'away': 'Rennes',
+             '1': 1.75, 'X': 3.75, '2': 4.25,
+             '1X': 1.19, '2X': 2.00, 'GG': 1.50, 'NG': 2.40},
+            {'home': 'Brest', 'away': 'Lorient',
+             '1': 2.20, 'X': 3.05, '2': 3.45,
+             '1X': 1.27, '2X': 1.60, 'GG': 1.75, 'NG': 1.97},
+            {'home': 'Nantes', 'away': 'Lione',
+             '1': 4.90, 'X': 3.75, '2': 1.65,
+             '1X': 2.15, '2X': 1.15, 'GG': 1.80, 'NG': 1.90},
+            {'home': 'Nizza', 'away': 'Monaco',
+             '1': 3.05, 'X': 3.70, '2': 2.10,
+             '1X': 1.65, '2X': 1.32, 'GG': 1.40, 'NG': 2.65},
+            {'home': 'Le Havre', 'away': 'Strasburgo',
+             '1': 3.90, 'X': 3.45, '2': 1.87,
+             '1X': 1.80, '2X': 1.21, 'GG': 1.73, 'NG': 1.97},
+            {'home': 'Auxerre', 'away': 'Paris FC',
+             '1': 2.40, 'X': 3.10, '2': 2.95,
+             '1X': 1.35, '2X': 1.50, 'GG': 1.77, 'NG': 1.90},
+            {'home': 'Angers', 'away': 'Tolosa',
+             '1': 3.40, 'X': 3.05, '2': 2.20,
+             '1X': 1.60, '2X': 1.27, 'GG': 1.92, 'NG': 1.77},
+            {'home': 'PSG', 'away': 'Marsiglia',
+             '1': 1.40, 'X': 5.00, '2': 6.25,
+             '1X': 1.08, '2X': 2.75, 'GG': 1.57, 'NG': 2.25},
+            # 10ª FL1 se appare
+        ],
+        'PD': [
+            {'home': 'Celta', 'away': 'Osasuna',
+             '1': 1.97, 'X': 3.30, '2': 4.10,
+             '1X': 1.22, '2X': 1.80, 'GG': 1.90, 'NG': 1.80},
+            {'home': 'Vallecano', 'away': 'Real Oviedo',
+             '1': 1.75, 'X': 3.40, '2': 4.75,
+             '1X': 1.16, '2X': 2.00, 'GG': 2.00, 'NG': 1.73},
+            {'home': 'Barcellona', 'away': 'Maiorca',
+             '1': 1.14, 'X': 8.50, '2': 14.0,
+             '1X': 1.04, '2X': 5.00, 'GG': 1.87, 'NG': 1.85},
+            {'home': 'Siviglia', 'away': 'Girona',
+             '1': 2.05, 'X': 3.30, '2': 3.55,
+             '1X': 1.27, '2X': 1.70, 'GG': 1.73, 'NG': 2.00},
+            {'home': 'Real Sociedad', 'away': 'Elche',
+             '1': 1.63, 'X': 3.90, '2': 5.00,
+             '1X': 1.14, '2X': 2.15, 'GG': 1.75, 'NG': 1.97},
+            {'home': 'Alaves', 'away': 'Getafe',
+             '1': 2.25, 'X': 2.80, '2': 3.70,
+             '1X': 1.24, '2X': 1.60, 'GG': 2.50, 'NG': 1.47},
+            {'home': 'Athletic Bilbao', 'away': 'Levante',
+             '1': 1.60, 'X': 3.85, '2': 5.50,
+             '1X': 1.12, '2X': 2.20, 'GG': 1.87, 'NG': 1.83},
+            {'home': 'Atletico Madrid', 'away': 'Betis',
+             '1': 1.45, 'X': 4.75, '2': 6.00,
+             '1X': 1.10, '2X': 2.60, 'GG': 1.75, 'NG': 1.97},
+            {'home': 'Valencia', 'away': 'Real Madrid',
+             '1': 5.50, 'X': 4.50, '2': 1.50,
+             '1X': 2.45, '2X': 1.12, 'GG': 1.60, 'NG': 2.20},
+            {'home': 'Villarreal', 'away': 'Espanyol',
+             '1': 1.70, 'X': 4.10, '2': 4.25,
+             '1X': 1.19, '2X': 2.05, 'GG': 1.67, 'NG': 2.10},
+        ],
     }
 # =======================
 # LOGGING SYSTEM
@@ -1255,6 +1327,73 @@ def score_slip_quality(slip, accuracy=0.495):
     prob_score = min(slip['prob'] * 100, 100) / 100 * 20
     return ev_score + legs_score + prob_score
 
+
+
+def validate_bet_combination(bets):
+    """
+    V27 CRITICAL FIX: Valida che non ci siano conflitti nella stessa partita
+    Es: Non puoi mettere '1' e '2' sulla stessa partita
+    """
+    match_to_bets = {}
+    
+    for bet in bets:
+        match_key = bet['match']
+        bet_type = bet['type']
+        
+        if match_key not in match_to_bets:
+            match_to_bets[match_key] = []
+        match_to_bets[match_key].append(bet_type)
+    
+    # Conflitti illegali
+    conflicts = [
+        {'1', '2'}, {'1', 'X'}, {'2', 'X'},  # Risultato esatto
+        {'1', '2X'}, {'2', '1X'},  # Doppia chance vs singolo
+        {'GG', 'NG'}  # Goal/No Goal
+    ]
+    
+    for match_key, bet_types in match_to_bets.items():
+        bet_set = set(bet_types)
+        for conflict in conflicts:
+            if conflict.issubset(bet_set):
+                return False  # CONFLITTO TROVATO
+    
+    return True  # OK, nessun conflitto
+
+def calculate_combined_probability(bets):
+    """
+    V27 CRITICAL FIX: Calcola la probabilità combinata CORRETTA
+    Per schedine multiple: prob_totale = prob1 * prob2 * prob3 * ...
+    """
+    if not bets:
+        return 0.0
+    
+    # SAFETY MARGIN: Riduci le probabilità del 10% per overconfidence
+    adjusted_probs = [bet['prob'] * 0.90 for bet in bets]
+    
+    # Probabilità combinata = prodotto di tutte le prob
+    combined_prob = np.prod(adjusted_probs)
+    
+    return combined_prob
+
+def calculate_combined_ev(bets):
+    """
+    V27 IMPROVEMENT: Calcola l'EV reale per schedine multiple
+    EV = (prob_combinata * quota_combinata) - 1
+    """
+    if not bets:
+        return 0.0
+    
+    combined_prob = calculate_combined_probability(bets)
+    combined_quota = np.prod([bet['quota'] for bet in bets])
+    
+    # Expected Value = (probabilità di vincita * quota totale) - stake (normalizzato a 1)
+    ev = (combined_prob * combined_quota) - 1.0
+    
+    return ev
+
+
+
+
 def generate_tiered_portfolio(options, model_accuracy, budget):
     if not options:
         log_msg("[WARN] Nessuna opzione disponibile per generare schedine", level="WARNING")
@@ -1317,18 +1456,34 @@ def generate_tiered_portfolio(options, model_accuracy, budget):
         # Skip rapido se match già usati
         if any(m in global_used_matches for m in matches): continue
         if len(matches) != len(set(matches)): continue
+        # PRIMA di creare lo slip, aggiungi:
+        if not validate_bet_combination(list(combo)):
+            continue
+
+        # POI calcola correttamente:
+        combined_prob = calculate_combined_probability(list(combo))
+        combined_ev = calculate_combined_ev(list(combo))
+
+        slip = {
+            'tier': 'ULTRA_SAFE', 'strategy': 'IL BUNKER 🛡️',
+            'matches': matches, 'types': [c['type'] for c in combo],
+            'prob': combined_prob,  # ✅ CORRETTO
+            'quota': np.prod([c['quota'] for c in combo]),
+            'quotas': [c['quota'] for c in combo],
+            'ev': combined_ev  # ✅ CORRETTO
+        }
         
-        if not check_correlation_conflict(matches):
-            slip = {
-                'tier': 'ULTRA_SAFE', 'strategy': 'IL BUNKER 🛡️',
-                'matches': matches, 'types': [c['type'] for c in combo],
-                'prob': np.prod([c['prob'] for c in combo]),
-                'quota': np.prod([c['quota'] for c in combo]),
-                'quotas': [c['quota'] for c in combo],
-                'ev': np.prod([c['ev'] for c in combo])
-            }
-            if len(tier1_slips) < 2: # Limitiamo a max 2 schedine per tier per forzare varietà
-                add_slip_with_dedup(slip, portfolio, tier1_slips)
+        # if not check_correlation_conflict(matches):
+        #     slip = {
+        #         'tier': 'ULTRA_SAFE', 'strategy': 'IL BUNKER 🛡️',
+        #         'matches': matches, 'types': [c['type'] for c in combo],
+        #         'prob': np.prod([c['prob'] for c in combo]),
+        #         'quota': np.prod([c['quota'] for c in combo]),
+        #         'quotas': [c['quota'] for c in combo],
+        #         'ev': np.prod([c['ev'] for c in combo])
+        #     }
+        if len(tier1_slips) < 2: # Limitiamo a max 2 schedine per tier per forzare varietà
+            add_slip_with_dedup(slip, portfolio, tier1_slips)
 
     portfolio.extend(tier1_slips)
 
@@ -1348,17 +1503,23 @@ def generate_tiered_portfolio(options, model_accuracy, budget):
         if any(m in global_used_matches for m in matches): continue
         if len(matches) != len(set(matches)): continue
 
-        if not check_correlation_conflict(matches):
-            slip = {
-                'tier': 'SAFE', 'strategy': 'IL TRINCERONE 🏰',
-                'matches': matches, 'types': [c['type'] for c in combo],
-                'prob': np.prod([c['prob'] for c in combo]),
-                'quota': np.prod([c['quota'] for c in combo]),
-                'quotas': [c['quota'] for c in combo],
-                'ev': np.prod([c['ev'] for c in combo])
-            }
-            if slip['prob'] >= 0.20 and len(tier2_slips) < 2:
-                add_slip_with_dedup(slip, portfolio, tier2_slips)
+        if not validate_bet_combination(list(combo)):
+            continue
+
+        combined_prob = calculate_combined_probability(list(combo))
+        combined_ev = calculate_combined_ev(list(combo))
+
+        slip = {
+            'tier': 'SAFE',  # ✅ CORRETTO
+            'strategy': 'IL TRINCERONE 🏰',  # ✅ CORRETTO
+            'matches': matches, 'types': [c['type'] for c in combo],
+            'prob': combined_prob,
+            'quota': np.prod([c['quota'] for c in combo]),
+            'quotas': [c['quota'] for c in combo],
+            'ev': combined_ev
+        }
+        if combined_prob >= 0.20 and len(tier2_slips) < 2:
+            add_slip_with_dedup(slip, portfolio, tier2_slips)
 
     portfolio.extend(tier2_slips)
 
@@ -1377,17 +1538,23 @@ def generate_tiered_portfolio(options, model_accuracy, budget):
         if any(m in global_used_matches for m in matches): continue
         if len(matches) != len(set(matches)): continue
 
-        if not check_correlation_conflict(matches):
-            slip = {
-                'tier': 'BALANCED', 'strategy': 'LA BILANCIA ⚖️',
-                'matches': matches, 'types': [c['type'] for c in combo],
-                'prob': np.prod([c['prob'] for c in combo]),
-                'quota': np.prod([c['quota'] for c in combo]),
-                'quotas': [c['quota'] for c in combo],
-                'ev': np.prod([c['ev'] for c in combo])
-            }
-            if slip['prob'] >= 0.12 and len(tier3_slips) < 2:
-                add_slip_with_dedup(slip, portfolio, tier3_slips)
+        if not validate_bet_combination(list(combo)):
+            continue
+
+        combined_prob = calculate_combined_probability(list(combo))
+        combined_ev = calculate_combined_ev(list(combo))
+
+        slip = {
+            'tier': 'BALANCED',  # ✅ CORRETTO
+            'strategy': 'LA BILANCIA ⚖️',  # ✅ CORRETTO
+            'matches': matches, 'types': [c['type'] for c in combo],
+            'prob': combined_prob,
+            'quota': np.prod([c['quota'] for c in combo]),
+            'quotas': [c['quota'] for c in combo],
+            'ev': combined_ev
+        }
+        if combined_prob >= 0.12 and len(tier3_slips) < 2:
+            add_slip_with_dedup(slip, portfolio, tier3_slips)
 
     portfolio.extend(tier3_slips)
 
@@ -1400,26 +1567,68 @@ def generate_tiered_portfolio(options, model_accuracy, budget):
     best_t4 = t4_ops[:15]
     random.shuffle(best_t4)
 
-    tier4_slips = []
-    # Una sola schedina aggressiva con 2-3 gambe ad alta quota
+    tier6_slips = []
     for combo in itertools.combinations(best_t4, 2):
         matches = [c['match'] for c in combo]
         if any(m in global_used_matches for m in matches): continue
         if len(matches) != len(set(matches)): continue
 
-        if not check_correlation_conflict(matches):
-            slip = {
-                'tier': 'AGGRESSIVE', 'strategy': 'QUOTA PAZZA 🎯',
-                'matches': matches, 'types': [c['type'] for c in combo],
-                'prob': np.prod([c['prob'] for c in combo]),
-                'quota': np.prod([c['quota'] for c in combo]),
-                'quotas': [c['quota'] for c in combo],
-                'ev': np.prod([c['ev'] for c in combo])
-            }
-            if slip['prob'] >= 0.15 and len(tier4_slips) < 1:  # SOLO 1 SCHEDINA AGGRESSIVA
-                add_slip_with_dedup(slip, portfolio, tier4_slips)
+        if not validate_bet_combination(list(combo)):
+            continue
 
-    portfolio.extend(tier4_slips)
+        combined_prob = calculate_combined_probability(list(combo))
+        combined_ev = calculate_combined_ev(list(combo))
+
+        slip = {
+            'tier': 'AGGRESSIVE',  # ✅ CORRETTO
+            'strategy': 'IL PIRATA 🚀',  # ✅ CORRETTO
+            'matches': matches, 'types': [c['type'] for c in combo],
+            'prob': combined_prob,
+            'quota': np.prod([c['quota'] for c in combo]),
+            'quotas': [c['quota'] for c in combo],
+            'ev': combined_ev
+        }
+        if combined_prob >= 0.08 and len(tier6_slips) < 1:  # SOLO 1
+            add_slip_with_dedup(slip, portfolio, tier6_slips)
+
+    portfolio.extend(tier6_slips)
+
+    # --- TIER 5: VALUE --- (10% budget)
+    log_msg("[TIER 5] 💎 VALUE - Caccia al valore (10% budget)")
+    t5_ops = [o for o in options if o['quota'] >= 1.80 and o['ev'] > 1.10]
+    t5_ops = [o for o in t5_ops if o['match'] not in global_used_matches]
+    t5_ops.sort(key=lambda x: x['ev'], reverse=True)
+    best_t5 = t5_ops[:15]
+    random.shuffle(best_t5)
+
+    tier5_slips = []
+    for combo in itertools.combinations(best_t5, 2):
+        matches = [c['match'] for c in combo]
+        if any(m in global_used_matches for m in matches): continue
+        if len(matches) != len(set(matches)): continue
+
+        if not validate_bet_combination(list(combo)):
+            continue
+
+        combined_prob = calculate_combined_probability(list(combo))
+        combined_ev = calculate_combined_ev(list(combo))
+        
+        slip = {
+            'tier': 'VALUE',
+            'strategy': 'IL CACCIATORE 💎',
+            'matches': matches, 'types': [c['type'] for c in combo],
+            'prob': combined_prob,
+            'quota': np.prod([c['quota'] for c in combo]),
+            'quotas': [c['quota'] for c in combo],
+            'ev': combined_ev
+        }
+        if combined_prob >= 0.15 and len(tier5_slips) < 2:
+            add_slip_with_dedup(slip, portfolio, tier5_slips)
+
+    portfolio.extend(tier5_slips)
+
+# --- TIER 6: AGGRESSIVE --- 
+# (rinomina l'attuale TIER 4 in TIER 6 o tieni AGGRESSIVE dopo VALUE)
 
     # NIENTE TIER 5 - Abbiamo finito con strategia realistica
     log_msg("[PORTFOLIO] ✅ Generato portfolio sostenibile: %d schedine" % len(portfolio))
@@ -1428,29 +1637,47 @@ def generate_tiered_portfolio(options, model_accuracy, budget):
     # Ma avendo già diversificato i tier, l'ordine qui è solo estetico per la stampa
     portfolio.sort(key=lambda x: x['quality_score'], reverse=True)
     return portfolio
+
 def allocate_budget_intelligent(portfolio, budget, model_accuracy):
-    """V27: Allocazione budget per profitti sostenibili settimanali (10-20% ROI)"""
-    # Budget allocation realistico:
-    # ULTRA_SAFE: 40% (il safe, il principale)
-    # SAFE: 30% (buon compromesso)
-    # BALANCED: 20% (un po' più rischio)
-    # AGGRESSIVE: 10% (una sola schedina pazza)
+    """
+    V27 IMPROVED: Budget allocation ottimizzato
+    50% ULTRA_SAFE, 20% SAFE, 10% BALANCED, 10% VALUE, 10% AGGRESSIVE
+    """
+    # # V27 NEW ALLOCATION (come richiesto)
+    # tier_allocations = {
+    #     'ULTRA_SAFE': 0.50,  # 50%
+    #     'SAFE': 0.20,        # 20%
+    #     'BALANCED': 0.10,    # 10%
+    #     'VALUE': 0.10,       # 10%
+    #     'AGGRESSIVE': 0.10   # 10%
+    # }
+    
+    # # Se accuracy è molto bassa (<50%), sii più conservativo
+    # if model_accuracy < 0.50:
+    #     tier_allocations = {
+    #         'ULTRA_SAFE': 0.60,
+    #         'SAFE': 0.25,
+    #         'BALANCED': 0.10,
+    #         'VALUE': 0.03,
+    #         'AGGRESSIVE': 0.02
+    #     }
+    # # Se accuracy è alta (>60%), puoi osare di più
+    # elif model_accuracy > 0.60:
+    #     tier_allocations = {
+    #         'ULTRA_SAFE': 0.45,
+    #         'SAFE': 0.20,
+    #         'BALANCED': 0.15,
+    #         'VALUE': 0.12,
+    #         'AGGRESSIVE': 0.08
+    #     }
     tier_allocations = {
-        'ULTRA_SAFE': 0.40, 'SAFE': 0.30, 'BALANCED': 0.20,
-        'AGGRESSIVE': 0.10
+        'ULTRA_SAFE': 0.70,  # 70%
+        'SAFE': 0.15,        # 15%
+        'BALANCED': 0.05,    # 5%
+        'VALUE': 0.05,       # 5%
+        'AGGRESSIVE': 0.05   # 5%
     }
-    if model_accuracy < 0.50:
-        # Se accuracy è bassa, ancora più conservativo
-        tier_allocations = {
-            'ULTRA_SAFE': 0.50, 'SAFE': 0.30, 'BALANCED': 0.15,
-            'AGGRESSIVE': 0.05
-        }
-    elif model_accuracy > 0.60:
-        # Se accuracy è alta, possiamo osare un po' più
-        tier_allocations = {
-            'ULTRA_SAFE': 0.35, 'SAFE': 0.30, 'BALANCED': 0.25,
-            'AGGRESSIVE': 0.10
-        }
+    
     return tier_allocations
 
 def print_final_strategy_v25(portfolio, budget, model_accuracy):
@@ -1537,8 +1764,8 @@ def print_final_strategy_v25(portfolio, budget, model_accuracy):
     log_msg("✅ GESTIONE: Se raggiungi +30% di profitto, reinvesti solo il 50% degli utili.")
     log_msg("="*100 + "\n")
 
-def calculate_best_bets_v25(df_next, odds_list, model_accuracy):
-    log_msg("\n[SCHEDINE V25] Generazione Portfolio Tiered Avanzato...")
+def calculate_best_bets_v25(df_next, odds_list, model_accuracy, df_hist):
+    log_msg("\n[SCHEDINE V26] Generazione Portfolio Tiered Avanzato...")
     all_options = []
     
     for i, row in df_next.iterrows():
@@ -1546,11 +1773,25 @@ def calculate_best_bets_v25(df_next, odds_list, model_accuracy):
             q = odds_list[i] if i < len(odds_list) else {}
             pr = row['probs']
             pa, px, ph = pr[0], pr[1], pr[2]
-            _, _, lh, la = calc_poisson_v23(row['home_team'], row['away_team'], 1.4, 1.3, 1.4, 1.3)
+            
+            # --- FIX: CALCOLO STATISTICHE REALI PER IL POISSON ---
+            h_stats = compute_advanced_stats(df_hist, row['home_team'], len(df_hist)+1)
+            a_stats = compute_advanced_stats(df_hist, row['away_team'], len(df_hist)+1)
+            
+            # Passiamo le medie gol reali (scored/conceded) al calcolatore
+            _, _, lh, la = calc_poisson_v23(
+                row['home_team'], row['away_team'], 
+                h_stats['scored_overall'], h_stats['conceded_overall'], 
+                a_stats['scored_overall'], a_stats['conceded_overall']
+            )
+            # ------------------------------------------------------
+
             p_0_0 = poisson.pmf(0, lh) * poisson.pmf(0, la)
             prob_ng = (poisson.pmf(0, lh) + poisson.pmf(0, la) - p_0_0)
             prob_gg = 1 - prob_ng
+            
             match_lbl = f"[{row['league']}] {row['home_team']} vs {row['away_team']}"
+            
             raw_bets = [
                 {'type': '1', 'prob': ph, 'quota': q.get('1', 1.0)},
                 {'type': 'X', 'prob': px, 'quota': q.get('X', 1.0)},
@@ -1560,14 +1801,18 @@ def calculate_best_bets_v25(df_next, odds_list, model_accuracy):
                 {'type': 'GG', 'prob': prob_gg, 'quota': q.get('GG', 1.0)},
                 {'type': 'NG', 'prob': prob_ng, 'quota': q.get('NG', 1.0)}
             ]
+            
             for bet in raw_bets:
-                if bet['quota'] <= 1.05: 
-                    continue
+                if bet['quota'] <= 1.05: continue
                 ev = bet['prob'] * bet['quota']
-                if ev > 0.98:
+                
+                if ev > 1.05:
                     all_options.append({
-                        'match': match_lbl, 'type': bet['type'],
-                        'prob': bet['prob'], 'quota': bet['quota'], 'ev': ev
+                        'match': match_lbl, 
+                        'type': bet['type'], 
+                        'prob': bet['prob'], 
+                        'quota': bet['quota'], 
+                        'ev': ev
                     })
         except Exception as e:
             continue
@@ -1620,7 +1865,8 @@ try:
             
             if not df_next.empty:
                 odds = fetch_odds_global(df_next)
-                calculate_best_bets_v25(df_next, odds, acc)
+                # FIX: Passiamo anche df_hist alla funzione così calcola statistiche vere per GG/NG
+                calculate_best_bets_v25(df_next, odds, acc, df_hist)
             else:
                 log_msg("[WARN] Nessuna partita futura per l'analisi", level="WARNING")
         else:
