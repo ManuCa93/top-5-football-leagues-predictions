@@ -38,163 +38,157 @@ except:
 DEBUG_MODE = True
 
 # Last matchday played
-DEBUG_MATCHDAYS = {'SA': 23, 'PL': 24, 'PD': 22, 'BL1': 20, 'FL1': 20}
+DEBUG_MATCHDAYS = {'SA': 29, 'PL': 30, 'PD': 228, 'BL1': 26, 'FL1': 26}
 
 def get_odds_mapping():
     return {
         'SA': [
-            {'home': 'Verona', 'away': 'Pisa',
-             '1': 2.40, 'X': 3.00, '2': 3.25,
-             '1X': 1.33, '2X': 1.55, 'GG': 1.90, 'NG': 1.80},
-            {'home': 'Genoa', 'away': 'Napoli',
-             '1': 4.40, 'X': 3.15, '2': 1.95,
-             '1X': 1.80, '2X': 1.19, 'GG': 2.10, 'NG': 1.65},
-            {'home': 'Fiorentina', 'away': 'Torino',
-             '1': 1.70, 'X': 3.70, '2': 4.90,
-             '1X': 1.16, '2X': 2.10, 'GG': 1.77, 'NG': 1.95},
-            {'home': 'Bologna', 'away': 'Parma',
-             '1': 1.60, 'X': 4.00, '2': 5.50,
-             '1X': 1.13, '2X': 2.25, 'GG': 1.90, 'NG': 1.80},
-            {'home': 'Lecce', 'away': 'Udinese',
-             '1': 3.00, 'X': 2.85, '2': 2.70,
-             '1X': 1.45, '2X': 1.35, 'GG': 2.15, 'NG': 1.63},
-            {'home': 'Sassuolo', 'away': 'Inter',
-             '1': 6.50, 'X': 4.60, '2': 1.45,
-             '1X': 2.65, '2X': 1.10, 'GG': 1.90, 'NG': 1.80},
-            {'home': 'Juventus', 'away': 'Lazio',
-             '1': 1.45, 'X': 4.25, '2': 7.25,
-             '1X': 1.08, '2X': 2.65, 'GG': 2.25, 'NG': 1.57},
-            {'home': 'Atalanta', 'away': 'Cremonese',
-             '1': 1.35, 'X': 4.90, '2': 8.00,
-             '1X': 1.06, '2X': 3.05, 'GG': 1.95, 'NG': 1.77},
-            {'home': 'Roma', 'away': 'Cagliari',
-             '1': 1.45, 'X': 4.25, '2': 7.25,
-             '1X': 1.08, '2X': 2.65, 'GG': 2.15, 'NG': 1.60},
-            # 10ª Serie A (manca su SNAI → la metti a mano qui se serve)
+            {'home': 'Cagliari', 'away': 'Napoli',
+             '1': 5.50, 'X': 3.40, '2': 1.73,
+             '1X': 2.10, '2X': 1.14, 'GG': 2.10, 'NG': 1.67},
+            {'home': 'Genoa', 'away': 'Udinese',
+             '1': 2.15, 'X': 3.00, '2': 4.00,
+             '1X': 1.23, '2X': 1.67, 'GG': 2.00, 'NG': 1.73},
+            {'home': 'Parma', 'away': 'Cremonese',
+             '1': 2.10, 'X': 3.10, '2': 3.75,
+             '1X': 1.25, '2X': 1.70, 'GG': 1.83, 'NG': 1.88},
+            {'home': 'Milan', 'away': 'Torino',
+             '1': 1.38, 'X': 4.50, '2': 9.00,
+             '1X': 1.05, '2X': 2.95, 'GG': 2.05, 'NG': 1.70},
+            {'home': 'Juventus', 'away': 'Sassuolo',
+             '1': 1.28, 'X': 5.75, '2': 11.0,
+             '1X': 1.03, '2X': 3.50, 'GG': 2.05, 'NG': 1.70},
+            {'home': 'Como', 'away': 'Pisa',
+             '1': 1.25, 'X': 6.00, '2': 13.0,
+             '1X': 1.01, '2X': 3.75, 'GG': 2.30, 'NG': 1.55},
+            {'home': 'Atalanta', 'away': 'Verona',
+             '1': 1.40, 'X': 4.50, '2': 8.50,
+             '1X': 1.06, '2X': 2.85, 'GG': 2.05, 'NG': 1.67},
+            {'home': 'Bologna', 'away': 'Lazio',
+             '1': 2.35, 'X': 3.10, '2': 3.25,
+             '1X': 1.32, '2X': 1.57, 'GG': 1.87, 'NG': 1.85},
+            {'home': 'Roma', 'away': 'Lecce',
+             '1': 1.48, 'X': 4.00, '2': 8.00,
+             '1X': 1.06, '2X': 2.55, 'GG': 2.15, 'NG': 1.60},
+            {'home': 'Fiorentina', 'away': 'Inter',
+             '1': 5.25, 'X': 4.00, '2': 1.63,
+             '1X': 2.25, '2X': 1.14, 'GG': 1.70, 'NG': 2.00},
         ],
         'PL': [
-            {'home': 'Leeds', 'away': 'Nottingham Forest',
-             '1': 2.15, 'X': 3.25, '2': 3.40,
-             '1X': 1.30, '2X': 1.67, 'GG': 1.77, 'NG': 1.93},
-            {'home': 'Man United', 'away': 'Tottenham',
-             '1': 1.55, 'X': 4.50, '2': 4.75,
-             '1X': 1.16, '2X': 2.35, 'GG': 1.50, 'NG': 2.40},
-            {'home': 'Fulham', 'away': 'Everton',
-             '1': 2.05, 'X': 3.20, '2': 3.65,
-             '1X': 1.25, '2X': 1.70, 'GG': 1.87, 'NG': 1.85},
-            {'home': 'Burnley', 'away': 'West Ham',
-             '1': 3.25, 'X': 3.45, '2': 2.10,
+            {'home': 'Bournemouth', 'away': 'Manchester United',
+             '1': 3.25, 'X': 3.75, '2': 2.10,
+             '1X': 1.70, '2X': 1.32, 'GG': 1.45, 'NG': 2.60},
+            {'home': 'Brighton', 'away': 'Liverpool',
+             '1': 3.00, 'X': 3.50, '2': 2.30,
+             '1X': 1.57, '2X': 1.35, 'GG': 1.53, 'NG': 2.35},
+            {'home': 'Fulham', 'away': 'Burnley',
+             '1': 1.55, 'X': 4.00, '2': 6.50,
+             '1X': 1.09, '2X': 2.35, 'GG': 1.80, 'NG': 1.90},
+            {'home': 'Everton', 'away': 'Chelsea',
+             '1': 3.40, 'X': 3.60, '2': 2.10,
              '1X': 1.67, '2X': 1.30, 'GG': 1.67, 'NG': 2.10},
-            {'home': 'Wolves', 'away': 'Chelsea',
-             '1': 4.75, 'X': 4.00, '2': 1.65,
-             '1X': 2.15, '2X': 1.16, 'GG': 1.63, 'NG': 2.15},
-            {'home': 'Bournemouth', 'away': 'Aston Villa',
-             '1': 2.65, 'X': 3.55, '2': 2.40,
-             '1X': 1.50, '2X': 1.43, 'GG': 1.50, 'NG': 2.40},
-            {'home': 'Arsenal', 'away': 'Sunderland',
-             '1': 1.20, 'X': 6.25, '2': 13.0,
-             '1X': 1.09, '2X': 4.10, 'GG': 2.50, 'NG': 1.47},
-            {'home': 'Newcastle', 'away': 'Brentford',
-             '1': 2.00, 'X': 3.45, '2': 3.50,
-             '1X': 1.27, '2X': 1.75, 'GG': 1.53, 'NG': 2.35},
-            {'home': 'Brighton', 'away': 'Crystal Palace',
-             '1': 1.92, 'X': 3.55, '2': 3.70,
-             '1X': 1.24, '2X': 1.80, 'GG': 1.60, 'NG': 2.15},
-            {'home': 'Liverpool', 'away': 'Man City',
-             '1': 2.30, 'X': 3.65, '2': 2.80,
-             '1X': 1.40, '2X': 1.57, 'GG': 1.45, 'NG': 2.55},
-        ],
-        'BL1': [
-            {'home': 'Union Berlin', 'away': 'Eintracht Frankfurt',
-             '1': 2.05, 'X': 3.45, '2': 3.55,
-             '1X': 1.28, '2X': 1.73, 'GG': 1.67, 'NG': 2.10},
-            {'home': 'Freiburg', 'away': 'Werder Bremen',
-             '1': 1.80, 'X': 3.70, '2': 4.10,
-             '1X': 1.20, '2X': 1.93, 'GG': 1.63, 'NG': 2.15},
-            {'home': 'Wolfsburg', 'away': 'Dortmund',
-             '1': 4.25, 'X': 4.00, '2': 1.70,
-             '1X': 2.05, '2X': 1.19, 'GG': 1.50, 'NG': 2.40},
-            {'home': 'Heidenheim', 'away': 'Hamburg',
-             '1': 2.85, 'X': 3.40, '2': 2.35,
-             '1X': 1.55, '2X': 1.40, 'GG': 1.60, 'NG': 2.20},
-            {'home': 'Mainz', 'away': 'Augsburg',
-             '1': 2.00, 'X': 3.50, '2': 3.45,
-             '1X': 1.27, '2X': 1.75, 'GG': 1.65, 'NG': 2.15},
-            {'home': 'St. Pauli', 'away': 'Stoccarda',
-             '1': 4.25, 'X': 3.65, '2': 1.77,
-             '1X': 1.95, '2X': 1.19, 'GG': 1.70, 'NG': 2.00},
-            {'home': 'Monchengladbach', 'away': 'Leverkusen',
-             '1': 3.45, 'X': 3.65, '2': 1.95,
-             '1X': 1.77, '2X': 1.27, 'GG': 1.50, 'NG': 2.40},
-            {'home': 'Colonia', 'away': 'Lipsia',
-             '1': 3.20, 'X': 3.75, '2': 2.05,
-             '1X': 1.70, '2X': 1.30, 'GG': 1.40, 'NG': 2.70},
-            {'home': 'Bayern', 'away': 'Hoffenheim',
-             '1': 1.27, 'X': 6.75, '2': 8.00,
-             '1X': 1.05, '2X': 3.55, 'GG': 1.50, 'NG': 2.40},
-            # 10ª BL1 se appare dopo su SNAI
-        ],
-        'FL1': [
-            {'home': 'Metz', 'away': 'Lille',
-             '1': 5.50, 'X': 4.25, '2': 1.55,
-             '1X': 2.40, '2X': 1.13, 'GG': 1.77, 'NG': 1.95},
-            {'home': 'Lens', 'away': 'Rennes',
-             '1': 1.75, 'X': 3.75, '2': 4.25,
-             '1X': 1.19, '2X': 2.00, 'GG': 1.50, 'NG': 2.40},
-            {'home': 'Brest', 'away': 'Lorient',
-             '1': 2.20, 'X': 3.05, '2': 3.45,
-             '1X': 1.27, '2X': 1.60, 'GG': 1.75, 'NG': 1.97},
-            {'home': 'Nantes', 'away': 'Lione',
-             '1': 4.90, 'X': 3.75, '2': 1.65,
-             '1X': 2.15, '2X': 1.15, 'GG': 1.80, 'NG': 1.90},
-            {'home': 'Nizza', 'away': 'Monaco',
-             '1': 3.05, 'X': 3.70, '2': 2.10,
-             '1X': 1.65, '2X': 1.32, 'GG': 1.40, 'NG': 2.65},
-            {'home': 'Le Havre', 'away': 'Strasburgo',
-             '1': 3.90, 'X': 3.45, '2': 1.87,
-             '1X': 1.80, '2X': 1.21, 'GG': 1.73, 'NG': 1.97},
-            {'home': 'Auxerre', 'away': 'Paris FC',
-             '1': 2.40, 'X': 3.10, '2': 2.95,
-             '1X': 1.35, '2X': 1.50, 'GG': 1.77, 'NG': 1.90},
-            {'home': 'Angers', 'away': 'Tolosa',
-             '1': 3.40, 'X': 3.05, '2': 2.20,
-             '1X': 1.60, '2X': 1.27, 'GG': 1.92, 'NG': 1.77},
-            {'home': 'PSG', 'away': 'Marsiglia',
-             '1': 1.40, 'X': 5.00, '2': 6.25,
-             '1X': 1.08, '2X': 2.75, 'GG': 1.57, 'NG': 2.25},
-            # 10ª FL1 se appare
+            {'home': 'Leeds', 'away': 'Brentford',
+             '1': 2.50, 'X': 3.40, '2': 2.80,
+             '1X': 1.40, '2X': 1.50, 'GG': 1.63, 'NG': 2.15},
+            {'home': 'Newcastle', 'away': 'Sunderland',
+             '1': 1.70, 'X': 3.75, '2': 5.00,
+             '1X': 1.14, '2X': 2.05, 'GG': 1.75, 'NG': 2.00},
+            {'home': 'Aston Villa', 'away': 'West Ham',
+             '1': 1.95, 'X': 3.60, '2': 3.75,
+             '1X': 1.24, '2X': 1.77, 'GG': 1.63, 'NG': 2.15},
+            {'home': 'Tottenham', 'away': 'Nottingham Forest',
+             '1': 2.25, 'X': 3.25, '2': 3.25,
+             '1X': 1.30, '2X': 1.60, 'GG': 1.65, 'NG': 2.10},
         ],
         'PD': [
-            {'home': 'Celta', 'away': 'Osasuna',
-             '1': 1.97, 'X': 3.30, '2': 4.10,
-             '1X': 1.22, '2X': 1.80, 'GG': 1.90, 'NG': 1.80},
-            {'home': 'Vallecano', 'away': 'Real Oviedo',
-             '1': 1.75, 'X': 3.40, '2': 4.75,
-             '1X': 1.16, '2X': 2.00, 'GG': 2.00, 'NG': 1.73},
-            {'home': 'Barcellona', 'away': 'Maiorca',
-             '1': 1.14, 'X': 8.50, '2': 14.0,
-             '1X': 1.04, '2X': 5.00, 'GG': 1.87, 'NG': 1.85},
-            {'home': 'Siviglia', 'away': 'Girona',
-             '1': 2.05, 'X': 3.30, '2': 3.55,
-             '1X': 1.27, '2X': 1.70, 'GG': 1.73, 'NG': 2.00},
-            {'home': 'Real Sociedad', 'away': 'Elche',
-             '1': 1.63, 'X': 3.90, '2': 5.00,
-             '1X': 1.14, '2X': 2.15, 'GG': 1.75, 'NG': 1.97},
-            {'home': 'Alaves', 'away': 'Getafe',
-             '1': 2.25, 'X': 2.80, '2': 3.70,
-             '1X': 1.24, '2X': 1.60, 'GG': 2.50, 'NG': 1.47},
-            {'home': 'Athletic Bilbao', 'away': 'Levante',
-             '1': 1.60, 'X': 3.85, '2': 5.50,
-             '1X': 1.12, '2X': 2.20, 'GG': 1.87, 'NG': 1.83},
-            {'home': 'Atletico Madrid', 'away': 'Betis',
-             '1': 1.45, 'X': 4.75, '2': 6.00,
-             '1X': 1.10, '2X': 2.60, 'GG': 1.75, 'NG': 1.97},
-            {'home': 'Valencia', 'away': 'Real Madrid',
-             '1': 5.50, 'X': 4.50, '2': 1.50,
-             '1X': 2.45, '2X': 1.12, 'GG': 1.60, 'NG': 2.20},
-            {'home': 'Villarreal', 'away': 'Espanyol',
-             '1': 1.70, 'X': 4.10, '2': 4.25,
-             '1X': 1.19, '2X': 2.05, 'GG': 1.67, 'NG': 2.10},
+            {'home': 'Villarreal', 'away': 'Real Sociedad',
+             '1': 1.95, 'X': 3.60, '2': 3.75,
+             '1X': 1.25, '2X': 1.80, 'GG': 1.60, 'NG': 2.20},
+            {'home': 'Elche', 'away': 'Maiorca',
+             '1': 2.15, 'X': 3.25, '2': 3.60,
+             '1X': 1.25, '2X': 1.65, 'GG': 1.77, 'NG': 1.95},
+            {'home': 'Espanyol', 'away': 'Getafe',
+             '1': 2.45, 'X': 2.90, '2': 3.40,
+             '1X': 1.30, '2X': 1.50, 'GG': 2.25, 'NG': 1.57},
+            {'home': 'Osasuna', 'away': 'Girona',
+             '1': 2.15, 'X': 3.40, '2': 3.40,
+             '1X': 1.30, '2X': 1.65, 'GG': 1.70, 'NG': 2.00},
+            {'home': 'Levante', 'away': 'Real Oviedo',
+             '1': 2.20, 'X': 3.25, '2': 3.50,
+             '1X': 1.27, '2X': 1.60, 'GG': 1.83, 'NG': 1.87},
+            {'home': 'Siviglia', 'away': 'Valencia',
+             '1': 2.30, 'X': 3.10, '2': 3.40,
+             '1X': 1.30, '2X': 1.57, 'GG': 1.90, 'NG': 1.80},
+            {'home': 'Barcellona', 'away': 'Vallecano',
+             '1': 1.22, 'X': 7.00, '2': 11.0,
+             '1X': 1.02, '2X': 3.90, 'GG': 1.77, 'NG': 1.95},
+            {'home': 'Celta', 'away': 'Alaves',
+             '1': 1.80, 'X': 3.50, '2': 4.50,
+             '1X': 1.17, '2X': 1.93, 'GG': 2.00, 'NG': 1.70},
+            {'home': 'Athletic Bilbao', 'away': 'Betis',
+             '1': 2.20, 'X': 3.50, '2': 3.25,
+             '1X': 1.30, '2X': 1.60, 'GG': 1.67, 'NG': 2.05},
+            {'home': 'Real Madrid', 'away': 'Atletico Madrid',
+             '1': 1.95, 'X': 3.75, '2': 3.60,
+             '1X': 1.25, '2X': 1.77, 'GG': 1.50, 'NG': 2.40},
+        ],
+        'BL1': [
+            {'home': 'Lipsia', 'away': 'Hoffenheim',
+             '1': 1.95, 'X': 4.00, '2': 3.50,
+             '1X': 1.30, '2X': 1.80, 'GG': 1.35, 'NG': 3.00},
+            {'home': 'Heidenheim', 'away': 'Leverkusen',
+             '1': 5.00, 'X': 4.25, '2': 1.60,
+             '1X': 2.25, '2X': 1.16, 'GG': 1.55, 'NG': 2.35},
+            {'home': 'Bayern', 'away': 'Union Berlino',
+             '1': 1.17, 'X': 8.50, '2': 14.0,
+             '1X': 1.01, '2X': 4.75, 'GG': 1.95, 'NG': 1.77},
+            {'home': 'Wolfsburg', 'away': 'Werder Bremen',
+             '1': 2.40, 'X': 3.50, '2': 2.90,
+             '1X': 1.40, '2X': 1.55, 'GG': 1.53, 'NG': 2.35},
+            {'home': 'Colonia', 'away': 'Monchengladbach',
+             '1': 2.30, 'X': 3.40, '2': 3.10,
+             '1X': 1.35, '2X': 1.60, 'GG': 1.60, 'NG': 2.20},
+            {'home': 'Dortmund', 'away': 'Amburgo',
+             '1': 1.38, 'X': 5.00, '2': 7.50,
+             '1X': 1.07, '2X': 2.95, 'GG': 1.67, 'NG': 2.05},
+            {'home': 'Mainz', 'away': 'Eintracht Francoforte',
+             '1': 2.15, 'X': 3.60, '2': 3.25,
+             '1X': 1.32, '2X': 1.67, 'GG': 1.55, 'NG': 2.30},
+            {'home': 'St. Pauli', 'away': 'Friburgo',
+             '1': 2.70, 'X': 3.25, '2': 2.60,
+             '1X': 1.47, '2X': 1.45, 'GG': 1.90, 'NG': 1.80},
+            {'home': 'Augsburg', 'away': 'Stoccarda',
+             '1': 3.40, 'X': 3.75, '2': 2.00,
+             '1X': 1.77, '2X': 1.30, 'GG': 1.50, 'NG': 2.45},
+        ],
+        'FL1': [
+            {'home': 'Lens', 'away': 'Angers',
+             '1': 1.22, 'X': 6.50, '2': 13.0,
+             '1X': 1.01, '2X': 4.10, 'GG': 2.10, 'NG': 1.67},
+            {'home': 'Tolosa', 'away': 'Lorient',
+             '1': 1.95, 'X': 3.10, '2': 4.50,
+             '1X': 1.19, '2X': 1.80, 'GG': 1.85, 'NG': 1.85},
+            {'home': 'Auxerre', 'away': 'Brest',
+             '1': 2.35, 'X': 3.25, '2': 3.10,
+             '1X': 1.35, '2X': 1.57, 'GG': 1.83, 'NG': 1.88},
+            {'home': 'Nizza', 'away': 'Psg',
+             '1': 8.50, 'X': 5.75, '2': 1.33,
+             '1X': 3.20, '2X': 1.06, 'GG': 1.60, 'NG': 2.15},
+            {'home': 'Lione', 'away': 'Monaco',
+             '1': 2.60, 'X': 3.60, '2': 2.50,
+             '1X': 1.50, '2X': 1.47, 'GG': 1.55, 'NG': 2.30},
+            {'home': 'Marsiglia', 'away': 'Lille',
+             '1': 1.90, 'X': 3.75, '2': 3.75,
+             '1X': 1.25, '2X': 1.87, 'GG': 1.65, 'NG': 2.10},
+            {'home': 'Rennes', 'away': 'Metz',
+             '1': 1.35, 'X': 5.25, '2': 8.50,
+             '1X': 1.06, '2X': 3.05, 'GG': 1.85, 'NG': 1.85},
+            {'home': 'Paris Fc', 'away': 'Le Havre',
+             '1': 2.00, 'X': 3.20, '2': 4.00,
+             '1X': 1.23, '2X': 1.77, 'GG': 1.77, 'NG': 1.95},
+            {'home': 'Nantes', 'away': 'Strasburgo',
+             '1': 3.50, 'X': 3.50, '2': 2.05,
+             '1X': 1.73, '2X': 1.30, 'GG': 1.70, 'NG': 2.05},
         ],
     }
 # =======================
@@ -235,6 +229,7 @@ PREDICT_SEASON = 2025
 SEED = 42
 np.random.seed(SEED)
 BUDGET_TOTALE = 100.0
+LAST_N_TEST = 10 
 
 LEAGUES_CONFIG = [
     {'code': 'SA', 'id': 2019, 'name': 'Serie A'},
@@ -915,15 +910,19 @@ def build_features_v26_enhanced(df):
             except Exception as e:
                 continue
         
-        log_msg(f"[OK] Training Set Creato: {len(X)} campioni con 27 features (V26).")
-        return np.array(X), np.array(y), df
+        # log_msg(f"[OK] Training Set Creato: {len(X)} campioni con 27 features (V26).")
+        # return np.array(X), np.array(y), df
+        meta = [{'league': row['league'], 'matchday': row['matchday']}
+            for _, row in df.iterrows() if not pd.isna(row.get('home_goals'))]
+        return np.array(X), np.array(y), df, meta
+
     
     except Exception as e:
         log_msg(f"[ERROR] Errore build_features_v26: {e}", level="ERROR")
         return np.array([]), np.array([]), df
 
-def train_model_v26_optimized(X, y):
-    """V26: Training with RobustScaler, SelectKBest, CalibratedClassifierCV for +5-7% accuracy"""
+def train_model_v26_optimized(X, y, meta=None, last_n_test=LAST_N_TEST):
+    """V26: Training with RobustScaler, SelectKBest, CalibratedClassifierCV + test set realistico sulle ultime N giornate"""
     log_msg("\n[3] AI TRAINING (V26: ROBUST SCALING + FEATURE SELECTION + CALIBRATION)...")
     try:
         if len(X) == 0 or len(y) == 0:
@@ -932,23 +931,36 @@ def train_model_v26_optimized(X, y):
 
         # 1. ROBUST SCALING (V26 Enhancement: Less sensitive to outliers)
         log_msg("[INFO] Scaling features with RobustScaler (V26)...", level="INFO")
-        scaler = RobustScaler(quantile_range=(10, 90))  # Robust to outliers
+        scaler = RobustScaler(quantile_range=(10, 90))
         X_scaled = scaler.fit_transform(X)
 
-        # 2. SPLIT Training/Test (85% - 15% chronological)
-        split = int(len(X) * 0.85)
-        X_train, X_test = X_scaled[:split], X_scaled[split:]
-        y_train, y_test = y[:split], y[split:]
-        
-        log_msg(f"[INFO] Dataset split: {len(X_train)} training, {len(X_test)} test")
+        # 2. SPLIT Training/Test — ultime N giornate per lega (realistico) o fallback 85/15
+        if meta is not None and len(meta) == len(X):
+            from collections import defaultdict
+            league_max_md = defaultdict(int)
+            for m in meta:
+                league_max_md[m['league']] = max(league_max_md[m['league']], m['matchday'])
+            test_mask = np.array([
+                m['matchday'] > league_max_md[m['league']] - last_n_test
+                for m in meta
+            ])
+            X_train = X_scaled[~test_mask]
+            X_test  = X_scaled[test_mask]
+            y_train = y[~test_mask]
+            y_test  = y[test_mask]
+            log_msg(f"[INFO] Split per giornata: {len(X_train)} train, {len(X_test)} test (ultime {last_n_test} GG/lega)")
+        else:
+            split = int(len(X) * 0.85)
+            X_train, X_test = X_scaled[:split], X_scaled[split:]
+            y_train, y_test = y[:split], y[split:]
+            log_msg(f"[INFO] Dataset split: {len(X_train)} training, {len(X_test)} test")
 
         # 3. FEATURE SELECTION (V26 Enhancement: SelectKBest for best features)
         log_msg("[INFO] Feature selection with SelectKBest (V26)...", level="INFO")
-        k_features = min(20, X_train.shape[1])  # Select best 20 features (or all if < 20)
+        k_features = min(20, X_train.shape[1])
         selector = SelectKBest(f_classif, k=k_features)
         X_train_selected = selector.fit_transform(X_train, y_train)
-        X_test_selected = selector.transform(X_test)
-        
+        X_test_selected  = selector.transform(X_test)
         log_msg(f"[INFO] Selected {k_features} best features from {X_train.shape[1]}")
 
         # --- DEFINING BASE LEARNERS (The Experts) ---
@@ -994,12 +1006,12 @@ def train_model_v26_optimized(X, y):
         clf = StackingClassifier(
             estimators=estimators,
             final_estimator=final_layer,
-            cv=5, 
-            passthrough=False, 
+            cv=5,
+            passthrough=False,
             n_jobs=-1
         )
 
-        # --- CALIBRATION (V26 Enhancement: CalibratedClassifierCV for reliable probabilities) ---
+        # --- CALIBRATION (V26 Enhancement: CalibratedClassifierCV) ---
         log_msg("[INFO] Wrapping model with CalibratedClassifierCV (V26)...", level="INFO")
         calibrated_clf = CalibratedClassifierCV(clf, method='sigmoid', cv=5)
 
@@ -1012,7 +1024,6 @@ def train_model_v26_optimized(X, y):
         log_msg(f"{'MODEL':<20} | {'ACCURACY':<10} | {'STATUS'}")
         log_msg("-" * 60)
 
-        # Evaluate Individual Models (access named_estimators from StackingClassifier)
         try:
             named_ests = calibrated_clf.estimator.named_estimators_
             for name in ['Random Forest', 'AdaBoost', 'Grad. Boosting']:
@@ -1023,17 +1034,19 @@ def train_model_v26_optimized(X, y):
         except Exception as e:
             log_msg(f"[WARN] Could not evaluate individual models: {e}")
 
-        # Evaluate Stacking System
-        preds = calibrated_clf.predict(X_test_selected)
-        acc = accuracy_score(y_test, preds)
+        preds     = calibrated_clf.predict(X_test_selected)
+        acc       = accuracy_score(y_test, preds)
         precision = precision_score(y_test, preds, average='weighted', zero_division=0)
-        recall = recall_score(y_test, preds, average='weighted', zero_division=0)
-        
+        recall    = recall_score(y_test, preds, average='weighted', zero_division=0)
+
         log_msg("-" * 60)
         log_msg(f"{'STACKING V26':<20} | {acc:.3f}      | [FINAL]")
         log_msg(f"{'Precision (weighted)':<20} | {precision:.3f}      | [V26]")
         log_msg(f"{'Recall (weighted)':<20} | {recall:.3f}      | [V26]")
         log_msg("-" * 60)
+
+        n_leagues = len(set(m['league'] for m in meta)) if meta else 5
+        log_msg(f"[INFO] Test set: ultime {last_n_test} GG × {n_leagues} leghe = ~{len(y_test)} partite recenti")
 
         if acc < 0.45:
             log_msg("[WARN] Accuracy is low. Markets might be volatile.", level="WARNING")
@@ -1300,22 +1313,24 @@ def calculate_kelly_stake_advanced(prob, quota, bankroll, tier='SAFE'):
     
     # Kelly Criterion MOLTO conservativo (5-15% invece di 20-75%)
     tier_fractions = {
-        'ULTRA_SAFE': 0.05,    # 5% - Ultra conservativo
-        'SAFE': 0.07,          # 7% - Molto conservativo
-        'BALANCED': 0.10,      # 10% - Conservativo
-        'VALUE': 0.12,         # 12% - Moderato
-        'AGGRESSIVE': 0.15     # 15% - Solo per quote pazze
+        'ULTRA_SAFE': 1.0,
+        'SAFE': 1.0,
+        'BALANCED': 0.10,
+        'VALUE': 0.12,
+        'AGGRESSIVE': 0.15
     }
+
     fractional = tier_fractions.get(tier, 0.08)
     stake_pct = f_star * fractional
     
     # Caps molto più bassi (max 2-6% per schedina)
+    # DOPO
     tier_caps = {
-        'ULTRA_SAFE': 0.02,    # Max 2%
-        'SAFE': 0.03,          # Max 3%
-        'BALANCED': 0.04,      # Max 4%
-        'VALUE': 0.05,         # Max 5%
-        'AGGRESSIVE': 0.06     # Max 6%
+        'ULTRA_SAFE': 0.20,  # Max 20% → 20€ su 100€
+        'SAFE': 0.12,        # Max 12% → 12€ su 100€
+        'BALANCED': 0.04,    # invariato
+        'VALUE': 0.05,       # invariato
+        'AGGRESSIVE': 0.06   # invariato
     }
     cap = tier_caps.get(tier, 0.03)
     return min(stake_pct * bankroll, bankroll * cap)
@@ -1482,7 +1497,7 @@ def generate_tiered_portfolio(options, model_accuracy, budget):
         #         'quotas': [c['quota'] for c in combo],
         #         'ev': np.prod([c['ev'] for c in combo])
         #     }
-        if len(tier1_slips) < 2: # Limitiamo a max 2 schedine per tier per forzare varietà
+        if len(tier1_slips) <= 4: # Limitiamo a max 2 schedine per tier per forzare varietà
             add_slip_with_dedup(slip, portfolio, tier1_slips)
 
     portfolio.extend(tier1_slips)
@@ -1643,39 +1658,12 @@ def allocate_budget_intelligent(portfolio, budget, model_accuracy):
     V27 IMPROVED: Budget allocation ottimizzato
     50% ULTRA_SAFE, 20% SAFE, 10% BALANCED, 10% VALUE, 10% AGGRESSIVE
     """
-    # # V27 NEW ALLOCATION (come richiesto)
-    # tier_allocations = {
-    #     'ULTRA_SAFE': 0.50,  # 50%
-    #     'SAFE': 0.20,        # 20%
-    #     'BALANCED': 0.10,    # 10%
-    #     'VALUE': 0.10,       # 10%
-    #     'AGGRESSIVE': 0.10   # 10%
-    # }
-    
-    # # Se accuracy è molto bassa (<50%), sii più conservativo
-    # if model_accuracy < 0.50:
-    #     tier_allocations = {
-    #         'ULTRA_SAFE': 0.60,
-    #         'SAFE': 0.25,
-    #         'BALANCED': 0.10,
-    #         'VALUE': 0.03,
-    #         'AGGRESSIVE': 0.02
-    #     }
-    # # Se accuracy è alta (>60%), puoi osare di più
-    # elif model_accuracy > 0.60:
-    #     tier_allocations = {
-    #         'ULTRA_SAFE': 0.45,
-    #         'SAFE': 0.20,
-    #         'BALANCED': 0.15,
-    #         'VALUE': 0.12,
-    #         'AGGRESSIVE': 0.08
-    #     }
     tier_allocations = {
-        'ULTRA_SAFE': 0.70,  # 70%
-        'SAFE': 0.15,        # 15%
-        'BALANCED': 0.05,    # 5%
-        'VALUE': 0.05,       # 5%
-        'AGGRESSIVE': 0.05   # 5%
+        'ULTRA_SAFE': 0.50,  # 50€ → BUNKER
+        'SAFE': 0.30,        # 30€ → TRINCERONE
+        'BALANCED': 0.15,    # 15€ → BILANCIA
+        'VALUE': 0.05,       # 5€  → CACCIATORE
+        'AGGRESSIVE': 0.00   # azzerato
     }
     
     return tier_allocations
@@ -1702,9 +1690,11 @@ def print_final_strategy_v25(portfolio, budget, model_accuracy):
             top_picks[tier] = []
         if len(top_picks[tier]) >= 2:
             continue
-        stake = calculate_kelly_stake_advanced(slip['prob'] * 0.95, slip['quota'], tier_budgets[tier], tier=tier)
-        if stake < 1.5:
-            stake = 1.5
+        stake = calculate_kelly_stake_advanced(slip['prob'], slip['quota'], budget, tier=tier)
+
+        if stake < 5.0:
+            stake = 5.0
+
         if tier_used[tier] + stake > tier_budgets[tier]:
             continue
         potential_win = stake * slip['quota']
@@ -1836,11 +1826,11 @@ try:
     else:
         # V26 Enhancement: Use new 27-feature engineering
         log_msg("[1] USING V26 ENHANCED FEATURES (27 FEATURES WITH ADVANCED METRICS)...")
-        X, y, df_hist = build_features_v26_enhanced(df_hist)
+        X, y, df_hist, meta = build_features_v26_enhanced(df_hist)
         
         # V26 Enhancement: Use optimized training with RobustScaler, SelectKBest, Calibration
         log_msg("[2] USING V26 OPTIMIZED TRAINING (ROBUST SCALING + CALIBRATION)...")
-        model_result = train_model_v26_optimized(X, y)
+        model_result = train_model_v26_optimized(X, y, meta=meta)
         
         if len(model_result) == 3:
             model, scaler, selector = model_result
@@ -1849,16 +1839,14 @@ try:
             selector = None
         
         if model is not None and scaler is not None:
-            # Calculate accuracy on test set
-            split = int(len(X) * 0.85)
-            X_scaled = scaler.transform(X)
-            
-            if selector:
-                X_test_selected = selector.transform(X_scaled[split:])
-            else:
-                X_test_selected = X_scaled[split:]
-            
-            acc = accuracy_score(y[split:], model.predict(X_test_selected))
+            from collections import defaultdict
+            league_max_md = defaultdict(int)
+            for m in meta:
+                league_max_md[m['league']] = max(league_max_md[m['league']], m['matchday'])
+            test_mask = np.array([m['matchday'] > league_max_md[m['league']] - LAST_N_TEST for m in meta])
+            X_scaled_main = scaler.transform(X)
+            X_test_sel_main = selector.transform(X_scaled_main[test_mask]) if selector else X_scaled_main[test_mask]
+            acc = accuracy_score(y[test_mask], model.predict(X_test_sel_main))
             log_msg(f"[V26] Final Model Accuracy on Test Set: {acc:.3f} ({acc*100:.1f}%)", level="INFO")
             
             df_next = predict_next_games(LEAGUES_CONFIG, df_hist, model, scaler, selector)
