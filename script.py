@@ -143,6 +143,7 @@ PREDICT_SEASON = 2025
 SEED = 42
 np.random.seed(SEED)
 BUDGET_TOTALE = 100.0
+LAST_N_TEST = 10 
 
 LEAGUES_CONFIG = [
     {'code': 'SA', 'id': 2019, 'name': 'Serie A'},
@@ -702,6 +703,7 @@ def train_model_v26_optimized(X, y):
 
         log_msg("[INFO] Scaling features with RobustScaler (V26)...", level="INFO")
         scaler = RobustScaler(quantile_range=(10, 90))
+        scaler = RobustScaler(quantile_range=(10, 90))
         X_scaled = scaler.fit_transform(X)
 
         split = int(len(X) * 0.85)
@@ -710,6 +712,7 @@ def train_model_v26_optimized(X, y):
         log_msg(f"[INFO] Dataset split: {len(X_train)} training, {len(X_test)} test")
 
         log_msg("[INFO] Feature selection with SelectKBest (V26)...", level="INFO")
+        k_features = min(20, X_train.shape[1])
         k_features = min(20, X_train.shape[1])
         selector = SelectKBest(f_classif, k=k_features)
         X_train_selected = selector.fit_transform(X_train, y_train)
@@ -746,8 +749,8 @@ def train_model_v26_optimized(X, y):
         preds = calibrated_clf.predict(X_test_selected)
         acc = accuracy_score(y_test, preds)
         precision = precision_score(y_test, preds, average='weighted', zero_division=0)
-        recall = recall_score(y_test, preds, average='weighted', zero_division=0)
-        
+        recall    = recall_score(y_test, preds, average='weighted', zero_division=0)
+
         log_msg("-" * 60)
         log_msg(f"{'STACKING V26':<20} | {acc:.3f}      | [FINAL]")
         log_msg("-" * 60)
