@@ -25,6 +25,7 @@ COLUMNS = {
     "HomeTeam": "home_team", "AwayTeam": "away_team",
     "FTHG": "home_goals", "FTAG": "away_goals",
     "HS": "home_shots", "AS": "away_shots", "HST": "home_sot", "AST": "away_sot",
+    "HC": "home_corners", "AC": "away_corners",
     "HxG": "home_xg", "AxG": "away_xg",
     # quote medie pre-partita (rilevate ~venerdì per il weekend, ~martedì per il turno infrasettimanale)
     "AvgH": "odds_1", "AvgD": "odds_x", "AvgA": "odds_2",
@@ -32,6 +33,7 @@ COLUMNS = {
     "MaxH": "max_1", "MaxD": "max_x", "MaxA": "max_2",
     # quote di chiusura: solo per analisi, MAI per decidere le giocate
     "AvgCH": "close_1", "AvgCD": "close_x", "AvgCA": "close_2",
+    "AvgC>2.5": "close_over25", "AvgC<2.5": "close_under25",
 }
 
 
