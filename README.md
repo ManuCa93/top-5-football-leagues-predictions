@@ -101,6 +101,28 @@ alla quota media (proxy Snai). Le regole sono scelte sul 2012–19 e verificate 
 - La quota media supera la quota equa Pinnacle in pochissime partite, e quando lo fa il mercato poi si muove contro
   (CLV negativo).
 
+## Strategie trovate online (ottobre 2026)
+
+`python -m predictor.online`: le stesse 105.000 partite, quota media di mercato, una unità a giocata.
+
+| Strategia | Fonte | Giocate | ROI | ROI 2020+ | CLV | Stagioni in attivo |
+|---|---|---|---|---|---|---|
+| Favoriti forti (prob. ≥ 70%) | bias favorito/sfavorito | 8749 | −0.3% | −0.9% | −2.2% | 6/15 |
+| Fine stagione: ospite che lotta per salvarsi | motivazione | 510 | −0.9% | +5.9% | −8.6% | 8/14 |
+| GAP ratings tiri + angoli, Over/Under 2.5 | Wheatcroft 2020 (LSE) | 641 | −3.3% | +5.6% (82 giocate) | −1.7% | 7/13 |
+| Pareggio fra squadre equilibrate | consigli online | 25617 | −3.8% | −3.4% | −5.9% | 2/15 |
+| Pareggi con progressione Fibonacci | Rigoni; Archontakis-Osborne | 30051 | −4.1% | −2.4% | −7.2% | 4/14 |
+| Sempre la squadra di casa | tesi Maynooth 2012 | 104626 | −6.3% | −7.4% | −5.6% | 0/15 |
+| Sempre il pareggio / la trasferta | Lezana 2026 | 104626 | −6.9% / −10.3% | | | 0/15 |
+| Contro la neopromossa, prime 8 giornate | | 4312 | −6.1% | −5.9% | −5.5% | 0/14 |
+| Dopo una sconfitta di 3+ gol | reazione eccessiva | 8898 | −9.1% | −10.6% | −6.9% | 1/15 |
+| Sfavorito in casa | Borghesi 2007 | 30104 | −9.7% | −13.3% | −9.0% | 0/15 |
+| Contro chi ha vinto 5 di fila | regressione dopo le serie | 1589 | −15.9% | −15.9% | −16.6% | 3/15 |
+
+Nessuna supera il margine. I due "+5%" sul 2020+ valgono poche centinaia di giocate con CLV negativo: è rumore.
+Il bias favorito/sfavorito è reale (i favoriti forti perdono pochissimo, gli sfavoriti tantissimo) ma non basta
+a passare in attivo. La progressione Fibonacci non cambia il valore atteso: alza solo le puntate (fino a 55 unità).
+
 ## Grid search delle feature (ottobre 2026)
 
 Domanda: aggiungendo alle quote la storia delle squadre si ottengono probabilità migliori del mercato,
@@ -167,6 +189,7 @@ predictor/
   doubles.py               simulazione "2 doppie a giornata" dal 2010/11
   scan.py                  inefficienze in 20 campionati, 1X2 e Over/Under (regole + gradient boosting)
   boost.py                 conviene la quota maggiorata? (run.py --maggiorata)
+  online.py                strategie dalla letteratura e dal web (pareggi, Fibonacci, GAP, motivazione...)
   sofascore.py, sofa_features.py  assenti e calendari da Sofascore (bloccato dopo poche richieste)
   legacy.py                il sistema di marzo 2026, portato fedelmente per la simulazione
   backtest_legacy.py       simulazione del vecchio sistema

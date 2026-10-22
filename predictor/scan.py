@@ -39,6 +39,8 @@ COLS = {  # nome interno -> colonne possibili nel CSV, in ordine di preferenza
     "avg_O": ("Avg>2.5", "BbAv>2.5"), "avg_U": ("Avg<2.5", "BbAv<2.5"),
     "max_O": ("Max>2.5", "BbMx>2.5"), "max_U": ("Max<2.5", "BbMx<2.5"),
 }
+STATS = {"home_shots": "HS", "away_shots": "AS", "home_sot": "HST", "away_sot": "AST", "home_corners": "HC",
+         "away_corners": "AC"}
 SCAN_DIR = DATA_DIR / "research"
 
 
@@ -71,6 +73,8 @@ def load_all():
             for name, options in COLS.items():
                 col = next((c for c in options if c in raw), None)
                 d[name] = pd.to_numeric(raw[col], errors="coerce") if col else np.nan
+            for name, col in STATS.items():
+                d[name] = pd.to_numeric(raw[col], errors="coerce") if col in raw else np.nan
             frames.append(d)
     df = pd.concat(frames, ignore_index=True).sort_values(["date", "div"]).reset_index(drop=True)
     df["match_id"] = np.arange(len(df))
