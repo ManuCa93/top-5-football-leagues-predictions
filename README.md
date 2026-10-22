@@ -84,6 +84,10 @@ Risultati (log loss: più basso è meglio; quote di mercato DEV = 0.9711):
   vale circa 10 partite), ma vale al massimo 2-5 decimillesimi di log loss: troppo poco contro un margine del 5-8%.
 - Il CLV (quota presa contro quota di chiusura) è negativo in ogni prova: le giocate "di valore" del modello
   sono quote che poi il mercato non ha confermato.
+- xG e statistiche avanzate da [Understat](https://understat.com) (dal 2014/15: xG, xG senza rigori, PPDA, passaggi
+  profondi, punti attesi; `predictor/understat.py`): stesse verifiche incrociate 2016–19 ↔ 2020–24. La differenza xG
+  pesata per stagione vale +0.0004 / +0.0000 di log loss, il pressing (PPDA) +0.0005 / −0.0004, gli xPts rispetto al
+  mercato +0.0002 / −0.0001; CLV fra −1.9% e −3.2% in ogni caso. Gli xG sono già nelle quote, anche per il GG/NG.
 - GG/NG: con il margine Snai (~8%) in 5 stagioni il modello trova 0–13 giocate con valore sulla carta, tutte con CLV negativo.
 - Forma recente, riposo, Europa e casa/trasferta sono già nel prezzo, come trovato anche nella ricerca su NBA e NFL.
 
@@ -108,6 +112,7 @@ predictor/
   research.py              feature candidate e modello "quote + correzioni" per la grid search
   grid.py, betgrid.py      grid search delle feature e delle regole di gioco
   europe.py                calendario europeo (openfootball) per riposo e carico
+  understat.py             xG, PPDA, passaggi profondi, punti attesi (Understat, dal 2014/15)
   sofascore.py, sofa_features.py  assenti e calendari da Sofascore (bloccato dopo poche richieste)
   legacy.py                il sistema di marzo 2026, portato fedelmente per la simulazione
   backtest_legacy.py       simulazione del vecchio sistema

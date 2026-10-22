@@ -15,8 +15,9 @@ CUTOFF = datetime(2020, 2, 1)
 
 
 def _families(base):
-    long = R.team_long(base)
+    long = R.team_long(base, with_advanced=True)
     return pd.concat([
+        R.season_weighted(long, "uxgd", 10, 3), R.ewm_strength(long, "xgf", 10), R.form_last_n(long, "uppda", 5),
         R.season_weighted(long, "pts", 10, 3), R.season_weighted(long, "res", 5, 0, venue=True),
         R.ewm_strength(long, "sotd", 10), R.form_last_n(long, "gd", 5), R.form_last_days(long, "pts", 21),
         R.rest_league(long), R.elo(base, 20, 70, 0.9),

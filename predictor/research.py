@@ -28,7 +28,8 @@ from .walkforward import DEV_SEASONS, HOLDOUT_SEASONS
 RESEARCH_DIR = DATA_DIR / "research"
 FIRST_SEASON = 2005  # prima stagione con quote medie (Betbrain) su football-data.co.uk
 TRAIN_FIRST_SEASON = 2006  # la prima serve solo come "stagione precedente"
-LEVEL_STATS = ("pts", "gd", "sotd", "shd", "cod", "gf", "ga", "sotf", "sota")  # livello della squadra
+LEVEL_STATS = ("pts", "gd", "sotd", "shd", "cod", "gf", "ga", "sotf", "sota", "uxgd", "unpxgd", "deepd", "uppda",
+               "xgf", "xga", "npxgf", "npxga")  # livello della squadra
 RESIDUAL_STATS = ("res", "gres", "scres", "cnres", "totres")  # rendimento rispetto a quanto si aspettava il mercato
 
 
@@ -72,7 +73,7 @@ def close_gg(base):
     return cached
 
 
-def team_long(base):
+def team_long(base, with_advanced=False):
     """Una riga per (partita, squadra) con statistiche della partita e attese del mercato."""
     cols = ["match_id", "league", "season", "date"]
     h = base[cols].assign(team=base.home_team, is_home=1, gf=base.home_goals, ga=base.away_goals,
@@ -83,7 +84,17 @@ def team_long(base):
                           sotf=base.away_sot, sota=base.home_sot, shf=base.away_shots, sha=base.home_shots,
                           cof=base.away_corners, coa=base.home_corners, xpts=3 * base.p_2 + base.p_X,
                           xgd=base.lambda_away - base.lambda_home, lf=base.lambda_away, la=base.lambda_home)
-    long = pd.concat([h, a], ignore_index=True).sort_values(["team", "date"]).reset_index(drop=True)
+    long = pd.concat([h, a], ignore_index=True)
+    if with_advanced:
+        from .understat import advanced_stats
+        long = long.merge(advanced_stats(base), on=["match_id", "is_home"], how="left")
+        long["uxgd"] = long.xgf - long.xga
+        long["unpxgd"] = long.npxgf - long.npxga
+        long["deepd"] = long.deepf - long.deepa
+        long["uppda"] = long.ppda_allowed - long.ppda  # positivo = pressa più dell'avversario
+        long["uxres"] = long.uxgd - (long.lf - long.la)  # xG rispetto ai gol attesi dal mercato
+        long["uxptsres"] = long.xpts_us - long.xpts
+    long = long.sort_values(["team", "date"]).reset_index(drop=True)
     long["pts"] = np.select([long.gf > long.ga, long.gf == long.ga], [3.0, 1.0], 0.0)
     long["gd"] = long.gf - long.ga
     long["sotd"] = long.sotf - long.sota
@@ -316,6 +327,9 @@ DAYS_GRID = (14, 21, 30)
 ELO_GRID = [(k, h, c) for k in (10, 20, 30) for h in (40, 70) for c in (0.7, 0.9)]
 STRENGTH_STATS = ("pts", "gd", "sotd", "shd", "cod", "res", "gres")
 GG_STATS = ("gf", "ga", "sotf", "sota", "shf", "sha", "scres", "cnres", "totres")
+# Understat (dal 2014/15)
+ADV_STRENGTH_STATS = ("uxgd", "unpxgd", "deepd", "uppda", "uxres", "uxptsres")
+ADV_GG_STATS = ("xgf", "xga", "npxgf", "npxga")
 SW_GRID_GG = [(m1, m2) for m1 in (0, 10, 38) for m2 in (0, 5)]
 
 
@@ -325,9 +339,9 @@ def feature_bank(base, sofa=True):
     if path.exists() and path.stat().st_mtime > max(p.stat().st_mtime for p in RESEARCH_DIR.parent.glob("raw/*.csv")):
         return pd.read_pickle(path)
     t = timer()
-    long = team_long(base)
+    long = team_long(base, with_advanced=True)
     parts = []
-    for stat in STRENGTH_STATS:
+    for stat in STRENGTH_STATS + ADV_STRENGTH_STATS:
         for m1, m2 in SW_GRID:
             parts.append(season_weighted(long, stat, m1, m2))
             parts.append(season_weighted(long, stat, m1, m2, venue=True))
@@ -335,7 +349,7 @@ def feature_bank(base, sofa=True):
             parts.append(ewm_strength(long, stat, h))
         for n in LASTN_GRID:
             parts.append(form_last_n(long, stat, n))
-    for stat in GG_STATS:
+    for stat in GG_STATS + ADV_GG_STATS:
         for m1, m2 in SW_GRID_GG:
             parts.append(season_weighted(long, stat, m1, m2))
             parts.append(season_weighted(long, stat, m1, m2, venue=True))

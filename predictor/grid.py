@@ -18,7 +18,7 @@ import pandas as pd
 from joblib import Parallel, delayed
 
 from .walkforward import DEV_SEASONS
-from .research import (DAYS_GRID, ELO_GRID, EWM_GRID, GG_STATS, LASTN_GRID, RESEARCH_DIR, STRENGTH_STATS, SW_GRID,
+from .research import (ADV_GG_STATS, ADV_STRENGTH_STATS, DAYS_GRID, ELO_GRID, EWM_GRID, GG_STATS, LASTN_GRID, RESEARCH_DIR, STRENGTH_STATS, SW_GRID,
                        SW_GRID_GG, TARGETS, design, feature_bank, fit_predict, load_base, timer)
 
 N_JOBS = 3
@@ -34,7 +34,7 @@ def families(bank, target="1x2"):
             fam.setdefault(f, {})[label] = cols
 
     if target == "gg":  # attacco e difesa delle due squadre, non la differenza
-        for stat in GG_STATS:
+        for stat in GG_STATS + ADV_GG_STATS:
             for m1, m2 in SW_GRID_GG:
                 add(f"stagioni_{stat}", f"m1={m1} m2={m2}", [f"sw_{stat}_{m1}_{m2}_h", f"sw_{stat}_{m1}_{m2}_a"])
                 add(f"casa_trasf_{stat}", f"m1={m1} m2={m2}", [f"swv_{stat}_{m1}_{m2}_h", f"swv_{stat}_{m1}_{m2}_a"])
@@ -42,7 +42,7 @@ def families(bank, target="1x2"):
                 add(f"decadimento_{stat}", f"mezza vita {h} partite", [f"ewm_{stat}_{h}_h", f"ewm_{stat}_{h}_a"])
             for n in (5, 10):
                 add(f"ultime_n_{stat}", f"n={n}", [f"last{n}_{stat}_h", f"last{n}_{stat}_a"])
-    for stat in STRENGTH_STATS if target == "1x2" else ():
+    for stat in STRENGTH_STATS + ADV_STRENGTH_STATS if target == "1x2" else ():
         for m1, m2 in SW_GRID:
             add(f"stagioni_{stat}", f"m1={m1} m2={m2}", [f"sw_{stat}_{m1}_{m2}_diff"])
             add(f"casa_trasf_{stat}", f"m1={m1} m2={m2}", [f"swv_{stat}_{m1}_{m2}_diff"])
@@ -201,6 +201,9 @@ if __name__ == "__main__":
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     if "--all" in sys.argv:  # scelta finale: tutte le stagioni prima del holdout
         main(args[0] if args else "1x2", sofa="--no-sofa" not in sys.argv, seasons=range(2014, 2025), tag="_all",
+             europe="--no-europe" not in sys.argv)
+    elif "--pre16" in sys.argv:  # controllo incrociato con gli xG: Understat parte dal 2014/15
+        main(args[0] if args else "1x2", sofa="--no-sofa" not in sys.argv, seasons=range(2016, 2020), tag="_pre16",
              europe="--no-europe" not in sys.argv)
     elif "--pre" in sys.argv:  # controllo della procedura: scelgo sul 2014-2019 e verifico sul DEV
         main(args[0] if args else "1x2", sofa="--no-sofa" not in sys.argv, seasons=range(2014, 2020), tag="_pre")
