@@ -4,6 +4,7 @@
   python run.py --bankroll 100      # solo al primo avvio: bankroll di partenza
   python run.py --as-of 2026-10-16  # prova come se fosse quel venerdì (non tocca il registro)
   python run.py --due-doppie        # 2 doppie a giornata invece di doppia + tripla + quota alta
+  python run.py --maggiorata Inter 1 2.60 --bankroll 100   # conviene la quota maggiorata Snai?
 """
 import argparse
 import sys
@@ -14,6 +15,7 @@ import numpy as np
 import pandas as pd
 
 from predictor import ledger as L
+from predictor.boost import check
 from predictor.config import REPORTS_DIR
 from predictor.context import fixture_context
 from predictor.data import load_fixtures, load_matches
@@ -45,8 +47,15 @@ def main():
     ap.add_argument("--as-of", help="data AAAA-MM-GG: prova su un venerdì passato")
     ap.add_argument("--no-open", action="store_true", help="non aprire il report nel browser")
     ap.add_argument("--due-doppie", action="store_true", help="2 doppie (quota 1.6-2.6) invece dei 3 tipi")
+    ap.add_argument("--maggiorata", nargs=3, metavar=("SQUADRA", "ESITO", "QUOTA"),
+                    help="conviene questa quota maggiorata? es. --maggiorata Inter 1 2.60")
     args = ap.parse_args()
     sys.stdout.reconfigure(errors="replace")  # console Windows non UTF-8: niente crash sui simboli
+
+    if args.maggiorata:
+        team, market, odds = args.maggiorata
+        print(check(team, market, float(odds.replace(",", ".")), args.bankroll))
+        return
 
     demo = args.as_of is not None
     now = datetime.fromisoformat(args.as_of).replace(hour=12) if demo else datetime.now()

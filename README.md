@@ -71,6 +71,36 @@ Il modello è positivo solo sulle stagioni usate per scegliere la sua feature (2
 fa −2.0% (2010–13) e −3.2% (2025–26), e il CLV è −4.3%: non è un vantaggio reale. Le strategie oneste perdono
 fra il 3% e il 13% a seconda di quanto margine pagano (doppie chance e GG/NG hanno i margini Snai più alti).
 
+## Quote maggiorate: l'unico valore positivo con Snai
+
+```bash
+python run.py --maggiorata Inter 1 2.60 --bankroll 100   # mercati: 1 X 2 1X X2 12 GG NG O U
+```
+
+Confronta la quota Snai con la quota equa senza margine. La quota equa viene da Pinnacle o Betfair Exchange, i
+riferimenti più precisi; se mancano, dalla media di mercato. Se la quota Snai è sopra la quota equa, il comando
+suggerisce 1/4 di Kelly come puntata.
+
+## Caccia alle inefficienze in 20 campionati (ottobre 2026)
+
+`python -m predictor.scan`: 105.000 partite 2012–oggi di 20 campionati (top 5, serie cadette inglesi, italiana,
+spagnola, tedesca e francese, Scozia, Olanda, Belgio, Portogallo, Turchia, Grecia), mercati 1X2 e Over/Under 2.5,
+alla quota media (proxy Snai). Le regole sono scelte sul 2012–19 e verificate sul 2020–oggi.
+
+| Regola | Giocate test | ROI test | CLV test | Stagioni in attivo |
+|---|---|---|---|---|
+| A. Quota media sopra la quota equa Pinnacle | 134 | −2.2% ± 6.6% | −1.9% | 3/6 |
+| B. Combinazioni campionato/esito/fascia di quota in attivo nel 2012–19 (+8% / +11% sul train) | 2837 | **−7.0% ± 2.4%** | −5.6% | 0/7 |
+| C. Gradient boosting su quote, struttura del mercato, Elo, forma, gol, riposo | 702 | −0.7% ± 2.4% | −2.1% | 2/6 |
+| Riferimento: esito 1X2 a caso | 46040 | −7.3% | −7.1% | 0/7 |
+
+- B è l'esempio tipico di regola trovata per caso: in attivo 8 stagioni su 8 nel periodo in cui è stata scelta,
+  0 su 7 dopo.
+- Il gradient boosting ha una log loss peggiore di Pinnacle sia sul 2016–19 (0.5973 contro 0.5968) sia dopo
+  (0.6209 contro 0.6207).
+- La quota media supera la quota equa Pinnacle in pochissime partite, e quando lo fa il mercato poi si muove contro
+  (CLV negativo).
+
 ## Grid search delle feature (ottobre 2026)
 
 Domanda: aggiungendo alle quote la storia delle squadre si ottengono probabilità migliori del mercato,
@@ -135,6 +165,8 @@ predictor/
   europe.py                calendario europeo (openfootball) per riposo e carico
   understat.py             xG, PPDA, passaggi profondi, punti attesi (Understat, dal 2014/15)
   doubles.py               simulazione "2 doppie a giornata" dal 2010/11
+  scan.py                  inefficienze in 20 campionati, 1X2 e Over/Under (regole + gradient boosting)
+  boost.py                 conviene la quota maggiorata? (run.py --maggiorata)
   sofascore.py, sofa_features.py  assenti e calendari da Sofascore (bloccato dopo poche richieste)
   legacy.py                il sistema di marzo 2026, portato fedelmente per la simulazione
   backtest_legacy.py       simulazione del vecchio sistema
