@@ -15,7 +15,8 @@ python run.py                  # poi ogni settimana, meglio il venerdì pomerigg
 Le quote delle prossime partite arrivano da football-data.co.uk di solito il venerdì (weekend) e il
 martedì (turno infrasettimanale): se lanci prima, il report lo segnala e chiude solo le schedine passate.
 
-Opzioni: `--budget-pct 5` (percentuale del bankroll da giocare a settimana, default 5%),
+Opzioni: `--due-doppie` (2 doppie con quota totale 1.6–2.6 invece di doppia + tripla + quota alta; per i turni
+infrasettimanali lancia il comando anche il martedì), `--budget-pct 5` (percentuale del bankroll da giocare a settimana, default 5%),
 `--as-of 2026-10-16` (prova come se fosse quel venerdì, senza toccare il registro), `--no-open`.
 
 Il registro è `data/ledger.csv`. Puoi modificarne due colonne a mano:
@@ -49,6 +50,26 @@ Con le quote Snai **ogni schedina ha un costo atteso negativo**: circa −3% le 
 −6% le triple, −10% la quota alta. Nessun modello costruito su dati pubblici ha battuto le quote.
 Il vantaggio è dalla tua parte solo quando Snai offre una quota più alta della "quota equa" mostrata nel
 report, ad esempio con le quote maggiorate.
+
+## Due doppie a giornata, 2010/11 – oggi
+
+`python -m predictor.doubles` simula 2 doppie da 5 € per ogni giornata (weekend e turni infrasettimanali) dei 5
+campionati, con le sole quote pre-partita e le quote Snai stimate; il report con le curve è in
+`reports/simulazione-due-doppie.html`.
+
+| Strategia | Doppie | Vinte | ROI | ROI 90% | CLV | Stagioni in attivo | In attivo dopo 5 stagioni |
+|---|---|---|---|---|---|---|---|
+| Meno costosa, quota 1.6–2.6 | 1533 | 54% | −3.4% | −7.2% / +0.5% | −3.7% | 8/16 | 27% |
+| Meno costosa, quota 2.5–4 | 1627 | 37% | −3.4% | −8.4% / +1.4% | −4.5% | 7/16 | 24% |
+| Favoriti più probabili (1/2) | 1668 | 52% | −5.4% | −9.3% / −1.5% | −3.8% | 6/16 | 16% |
+| Doppie chance più probabili | 1668 | 59% | −6.2% | −9.9% / −2.4% | −9.4% | 4/16 | 8% |
+| GG/NG più probabili | 1668 | 40% | −8.9% | −13.4% / −4.5% | −16.3% | 5/16 | 1% |
+| Casuale (quote 1.3–2.0) | 1668 | 32% | −13.3% | −18.5% / −8.1% | −12.1% | 2/16 | 0% |
+| Modello (pesi stagioni) | 1525 | 42% | +1.4% | −3.9% / +6.4% | −4.3% | 9/16 | 66% |
+
+Il modello è positivo solo sulle stagioni usate per scegliere la sua feature (2014–24: +3.1%); su quelle non usate
+fa −2.0% (2010–13) e −3.2% (2025–26), e il CLV è −4.3%: non è un vantaggio reale. Le strategie oneste perdono
+fra il 3% e il 13% a seconda di quanto margine pagano (doppie chance e GG/NG hanno i margini Snai più alti).
 
 ## Grid search delle feature (ottobre 2026)
 
@@ -113,6 +134,7 @@ predictor/
   grid.py, betgrid.py      grid search delle feature e delle regole di gioco
   europe.py                calendario europeo (openfootball) per riposo e carico
   understat.py             xG, PPDA, passaggi profondi, punti attesi (Understat, dal 2014/15)
+  doubles.py               simulazione "2 doppie a giornata" dal 2010/11
   sofascore.py, sofa_features.py  assenti e calendari da Sofascore (bloccato dopo poche richieste)
   legacy.py                il sistema di marzo 2026, portato fedelmente per la simulazione
   backtest_legacy.py       simulazione del vecchio sistema

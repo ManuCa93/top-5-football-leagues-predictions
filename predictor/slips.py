@@ -17,6 +17,11 @@ SLIP_TYPES = [
     {"name": "Tripla", "legs": 3, "min_leg_prob": 0.50, "odds": (3.0, 6.0), "budget_share": 0.3},
     {"name": "Quota alta", "legs": 4, "min_leg_prob": 0.40, "odds": (8.0, 25.0), "budget_share": 0.2},
 ]
+# "2 doppie a giornata": la strategia che perde meno nella simulazione 2010-2026 (predictor/doubles.py)
+DUE_DOPPIE = [
+    {"name": "Doppia 1", "legs": 2, "min_leg_prob": 0.0, "odds": (1.6, 2.6), "budget_share": 0.5},
+    {"name": "Doppia 2", "legs": 2, "min_leg_prob": 0.0, "odds": (1.6, 2.6), "budget_share": 0.5},
+]
 MIN_LEG_ODDS = 1.20  # sotto questa quota la gamba aggiunge rischio quasi senza pagare
 TOP_CANDIDATES = 30
 

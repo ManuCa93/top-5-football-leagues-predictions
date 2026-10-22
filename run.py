@@ -3,6 +3,7 @@
   python run.py                     # uso normale (meglio il venerdì pomeriggio)
   python run.py --bankroll 100      # solo al primo avvio: bankroll di partenza
   python run.py --as-of 2026-10-16  # prova come se fosse quel venerdì (non tocca il registro)
+  python run.py --due-doppie        # 2 doppie a giornata invece di doppia + tripla + quota alta
 """
 import argparse
 import sys
@@ -18,7 +19,7 @@ from predictor.context import fixture_context
 from predictor.data import load_fixtures, load_matches
 from predictor.odds import add_market
 from predictor.report import render
-from predictor.slips import build_slips, candidate_legs
+from predictor.slips import DUE_DOPPIE, SLIP_TYPES, build_slips, candidate_legs
 
 DAYS_AHEAD = 7
 MIN_WEEKLY_BUDGET = 3.0
@@ -43,6 +44,7 @@ def main():
     ap.add_argument("--budget-pct", type=float, default=5.0, help="%% del bankroll da giocare a settimana (default 5)")
     ap.add_argument("--as-of", help="data AAAA-MM-GG: prova su un venerdì passato")
     ap.add_argument("--no-open", action="store_true", help="non aprire il report nel browser")
+    ap.add_argument("--due-doppie", action="store_true", help="2 doppie (quota 1.6-2.6) invece dei 3 tipi")
     args = ap.parse_args()
     sys.stdout.reconfigure(errors="replace")  # console Windows non UTF-8: niente crash sui simboli
 
@@ -68,7 +70,8 @@ def main():
     if len(fx):
         fx = fx.merge(fixture_context(played, fx, now), on="match_id")
         recs = [{**r, "label": f"{r['home_team']} - {r['away_team']}"} for r in fx.to_dict("records")]
-        slips = build_slips(candidate_legs(recs), weekly_budget)
+        slips = build_slips(candidate_legs(recs), weekly_budget,
+                            slip_types=DUE_DOPPIE if args.due_doppie else SLIP_TYPES)
     else:
         slips = []
 
